@@ -585,7 +585,7 @@ public class PlayVideo extends Activity {
                 try {
                     if (response.optString("returncode", "").equals("0")) {
                         isFavorite = true;
-                        mPlayControl.setFavorite(isFavorite);   //收藏图片切换
+                        mPlayControl.setFavoriteBg(isFavorite);   //收藏图片切换
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -626,7 +626,7 @@ public class PlayVideo extends Activity {
                 try {
                     if (response.optString("returncode").equals("0")) {
                         isFavorite = false;
-                        mPlayControl.setFavorite(isFavorite);
+                        mPlayControl.setFavoriteBg(isFavorite);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -667,7 +667,7 @@ public class PlayVideo extends Activity {
                 try {
                     if (response.optString("returncode").equals("0")) {
                         isFavorite = true;
-                        mPlayControl.setFavorite(isFavorite);
+                        mPlayControl.setFavoriteBg(isFavorite);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1140,6 +1140,11 @@ public class PlayVideo extends Activity {
                 upnpService.getRegistry().removeAllRemoteDevices();
             }
             upnpService.getControlPoint().search();
+        }
+
+        @Override       //全屏分享监听
+        public void onShare() {
+
         }
 
     };

@@ -55,4 +55,6 @@ public interface OnPlayerControlListener {
     public abstract void isFullVolBri();
 
     public abstract void onRefreshDlna();
+
+    public abstract void onShare();
 }

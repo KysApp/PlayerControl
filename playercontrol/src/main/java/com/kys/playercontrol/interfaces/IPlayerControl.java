@@ -51,4 +51,6 @@ public interface IPlayerControl {
     void setFavoriteShow(boolean show);
 
     void setDlnaShow(boolean show);
+
+    void setShareShow(boolean show);
 }

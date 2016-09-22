@@ -99,7 +99,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private boolean mIsFirstBrightnessGesture = true;
 
     int screenWidth;
-    public ImageView img_play_channel, img_play_share, img_play_favorite;
+    public ImageView img_play_channel, img_play_dlna, img_play_favorite, img_play_share;
     private boolean isChannelShow = false;
     private boolean isShareShow = false;
     private boolean isDefinShow = false;
@@ -227,6 +227,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         mSize = (ImageView) findViewById(R.id.player_overlay_size);
         mSize.setOnClickListener(new OnClickListioners("mSizeListener"));
         img_play_favorite = (ImageView) findViewById(R.id.img_play_favorite);
+        img_play_share = (ImageView) findViewById(R.id.img_play_share);
+        img_play_share.setOnClickListener(new OnClickListioners("mPlayShare"));
         img_play_channel = (ImageView) findViewById(R.id.img_play_channel);
         //img_play_channel显示选集状态，点击弹出选集弹窗
         if ((STATE_VOD_LIVE == 0)) {
@@ -264,8 +266,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         img_volume = (ImageView) findViewById(R.id.img_volume);
         img_play_defi = (ImageView) findViewById(R.id.img_play_defi);
         img_play_defi.setOnClickListener(new OnClickListioners("mPlayDefinition"));
-        img_play_share = (ImageView) findViewById(R.id.img_play_share);
-        img_play_share.setOnClickListener(new OnClickListioners("mDlanShare"));
+        img_play_dlna = (ImageView) findViewById(R.id.img_play_dlna);
+        img_play_dlna.setOnClickListener(new OnClickListioners("mDlanShare"));
     }
 
     //DLNA设备展现
@@ -773,7 +775,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         }
     }
 
-    public void setFavorite(boolean isFavorite) {
+    public void setFavoriteBg(boolean isFavorite) {
         if (isFavorite) {
             img_play_favorite.setImageResource(R.drawable.live_precolle);
         } else {
@@ -1183,6 +1185,15 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @Override
     public void setDlnaShow(boolean show) {
         if(show) {
+            img_play_dlna.setVisibility(View.VISIBLE);
+        }else{
+            img_play_dlna.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setShareShow(boolean show) {
+        if(show) {
             img_play_share.setVisibility(View.VISIBLE);
         }else{
             img_play_share.setVisibility(View.GONE);
@@ -1390,6 +1401,12 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                     break;
                 case "mBookMarkCancel":
                     layout_bookmark.setVisibility(View.INVISIBLE);
+                    break;
+                case "mPlayShare":
+                    if(listener != null)
+                        listener.onShare();
+                    break;
+                default:
                     break;
 
             }

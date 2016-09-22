@@ -1,8 +1,11 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+    resourcePrefix"kysyfplaycontrol_"
 
     defaultConfig {
         minSdkVersion 14
@@ -21,4 +24,88 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+}
+
+// 项目的主页  填写项目在github上的地址
+defsiteUrl = 'https://github.com/KysApp/PlayerControl'
+// Git仓库的url项目主页的地址后面加上 .git
+defgitUrl = 'https://github.com/KysApp/PlayerControl.git'
+// 这里是groupId ,必须填写  一般填你唯一的包名 此处填写library的包名
+group = "com.kys.playercontrol"
+
+install {
+    repositories.mavenInstaller{
+// This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+//项目描述，简单一句话即可
+                name 'A download for files and images,and tool for image compression'
+                urlsiteUrl
+// Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'kysyf'        //填写开发者的一些基本信息
+                        name 'kysyf'    	//填写开发者的一些基本信息
+                        email 'kysyf@qq.com'   //填写开发者的一些基本信息
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnectiongitUrl
+                    urlsiteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet'UTF-8'
+        author true
+        version true
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
+}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+//读取local.properties文件里面的bintray.user
+    user = properties.getProperty("bintray.user")
+//读取local.properties文件里面的bintray.apikey
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "PlayControl"    //发布到JCenter上的项目名字，必须填写
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
 }

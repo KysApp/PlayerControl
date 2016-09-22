@@ -51,7 +51,7 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/player_overlay_header"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/width_38"
@@ -60,25 +60,57 @@
         android:background="@color/transparent_gray"
         android:gravity="center_vertical"
         android:padding="@dimen/subtitle_padding"
+        android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            style="@style/white_30_32"
-            android:id="@+id/player_overlay_systime"
+        <ImageView
+            android:id="@+id/player_overlay_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-             />
+            android:paddingLeft="@dimen/width_13"
+            android:paddingTop="@dimen/width_4"
+            android:paddingBottom="@dimen/width_4"
+            android:src="@drawable/back"
+            />
 
         <TextView
             style="@style/white_34_36"
             android:id="@+id/player_overlay_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"/>
+            android:gravity="center"
+            android:layout_weight="1"
+            />
+
+        <ImageView
+            android:id="@+id/img_play_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/width_4"
+            android:paddingRight="@dimen/width_4"
+            android:src="@drawable/live_collection"
+            />
+
+        <ImageView
+            android:id="@+id/img_play_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/width_4"
+            android:paddingRight="@dimen/width_4"
+            android:src="@drawable/live_share"
+            />
+
+        <TextView
+            style="@style/white_30_32"
+            android:id="@+id/player_overlay_systime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/width_4"
+            android:paddingRight="@dimen/width_4"
+            android:layout_marginRight="@dimen/width_13"
+            />
 
         <TextView
             android:id="@+id/player_overlay_battery"
@@ -89,18 +121,7 @@
             android:textSize="15sp"
             android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/player_overlay_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/width_18"
-            android:paddingTop="@dimen/width_5"
-            android:paddingBottom="@dimen/width_5"
-            android:src="@drawable/back" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/interface_overlay"
@@ -264,15 +285,7 @@
         </RelativeLayout>
 
         <ImageView
-            android:id="@+id/img_play_favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/width_4"
-            android:paddingRight="@dimen/width_4"
-            android:src="@drawable/live_collection" />
-
-        <ImageView
-            android:id="@+id/img_play_share"
+            android:id="@+id/img_play_dlna"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/width_4"

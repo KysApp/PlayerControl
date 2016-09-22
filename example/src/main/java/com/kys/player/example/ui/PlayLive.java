@@ -837,6 +837,11 @@ public class PlayLive extends Activity implements OnClickListener,
 
         }
 
+        @Override
+        public void onShare() {
+
+        }
+
     };
 
 }
