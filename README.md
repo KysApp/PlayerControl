@@ -1,6 +1,6 @@
 使用  compile 'com.kys.playercontrol:playercontrol:1.0.0'  将项目导入studio
 
-一、播放器控制层初始化
+=播放器控制层初始化
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void initPlayer() {
         // TODO Auto-generated method stub
@@ -13,7 +13,7 @@
         frame_control.addView((View) mPlayControl);
     }
 
-二、播放控制层监听
+=播放控制层监听
     private final OnPlayerControlListener mPlayerControlListener = new OnPlayerControlListener() {
         //播放器状态监听
         @Override
@@ -185,7 +185,7 @@
 
     };
 
-三、控制层相关设置
+=控制层相关设置
     //切换播放按钮图片
     mPlayControl.setState(boolean isPlaying);
     //向控制层传递当前播放时间点
