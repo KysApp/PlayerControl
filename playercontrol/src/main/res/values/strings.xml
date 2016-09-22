@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PlayControl</string>
+    <string name="txt_last_play_time">续播</string>
+    <string name="txt_refresh">刷新设备列表</string>
+    <string name="select_dlna">投屏</string>
+    <string name="select_series">选集</string>
+    <string name="brightness">亮度</string>
+    <string name="volume">音量</string>
+</resources>

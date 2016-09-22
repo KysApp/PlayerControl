@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory>
+        <CheckBoxPreference
+            android:enabled="true"
+            android:key="dms_status"/>
+
+<!--    <ListPreference
+            android:entries="@array/entries_media"
+            android:entryValues="@array/entryvalues_media"
+            android:key="dms_share_content"
+            android:summary="@string/share_content_setting_breif"
+            android:title="@string/share_content_setting" /> -->    
+
+        <EditTextPreference
+            android:key="dms_name"/>
+
+        <CheckBoxPreference
+            android:enabled="true"
+            android:key="dmr_status"/>
+
+        <EditTextPreference
+            android:key="player_name" />
+
+        <Preference
+            android:key="net_setting" >
+            <intent android:action="android.settings.WIFI_SETTINGS" />
+        </Preference>
+
+        <ListPreference
+            android:defaultValue="5"
+            android:key="image_slide_time" />
+
+        <Preference
+            android:key="about" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

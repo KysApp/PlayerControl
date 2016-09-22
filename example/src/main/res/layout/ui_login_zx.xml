@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/phone"
+        style="@style/gray_a9a9a9_28"
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/login_acc_box"
+        android:hint="@string/hint_phone"
+        android:paddingBottom="5dp"
+        android:paddingLeft="30dp" />
+
+    <EditText
+        android:id="@+id/password"
+        style="@style/gray_a9a9a9_28"
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:background="@drawable/login_icon_password"
+        android:hint="@string/hine_password"
+        android:inputType="textPassword"
+        android:paddingBottom="5dp"
+        android:paddingLeft="30dp" />
+
+    <com.kys.player.example.selfview.HeiTiTextView
+        android:id="@+id/login"
+        style="@style/white_30_32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:background="@drawable/login_btn"
+        android:gravity="center"
+        android:text="@string/login" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!--<TextView-->
+        <!--android:id="@+id/version"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="15dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:text="" />-->
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp" />
+    </RelativeLayout>
+</LinearLayout>

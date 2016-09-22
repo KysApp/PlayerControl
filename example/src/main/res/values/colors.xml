@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="light_gray">#F4F4F4</color>
+    <color name="gray">#B2B2B2</color>
+    <color name="deep_gray">#5D5E5D</color>
+    <color name="blue">#598DCA</color>
+    <color name="red">#C8351F</color>
+    <color name="green">#3CB371</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="item_common">#F111</color>
+    <color name="item_1">#F222</color>
+    <color name="item_2">#F000</color>
+    <color name="orange">#FFF48B00</color>
+    <color name="darkorange">#FF824600</color>
+    <color name="transparent_gray">#A000</color>
+    <color name="no_color">#00000000</color>
+    <color name="bg_color">#F4F3F3</color>
+    <color name="bg_color_deep">#E5E5E5</color>
+    <color name="bg_color_deep1">#E7E8E9</color>
+    <color name="bg_color_grey_deep">#727272</color>
+    <color name="text_color">#434343</color>
+    <color name="black_half">#50000000</color>
+    <color name="play_model_bg">#36302E</color>
+    <color name="shallow_black">#515050</color>
+    <color name="blue_select_all">#598DCA</color>
+    <color name="red_delete">#D33F33</color>
+    <color name="grey_delete">#A1A1A1</color>
+
+    <color name="dark_red">#591C19</color>
+
+    <!--新增颜色-->
+    <color name="gray_666666">#666666</color>
+    <color name="gray_dbdbdb">#dbdbdb</color>
+    <color name="gray_e5e5e5">#e5e5e5</color>
+    <color name="gray_f3f3f3">#f3f3f3</color>
+    <color name="gray_3a3a3a">#3a3a3a</color>
+    <color name="gray_e6e6e6">#e6e6e6</color>
+    <color name="gray_262626">#262626</color>
+    <color name="gray_bfbfbf">#bfbfbf</color>
+    <color name="gray_f7f7f7">#f7f7f7</color>
+    <color name="gray_333434">#333434</color>
+    <color name="gray_a1a1a1">#a1a1a1</color>
+    <color name="blue_0085d1">#0085d1</color>
+    <color name="blue_5a8dca">#5a8dca</color>
+    <color name="green_8fc320">#8fc320</color>
+    <color name="green_26ac3d">#26ac3d</color>
+    <color name="red_d33e32">#d33e32</color>
+    <color name="red_e55848">#e55848</color>
+
+    <!--中兴新增颜色-->
+    <color name="blue_5fb6e8">#5fb6e8</color>
+    <color name="gray_5b5b5b">#5b5b5b</color>
+    <color name="gray_8a8a8a">#8a8a8a</color>
+    <color name="gray_a9a9a9">#a9a9a9</color>
+    <color name="gray_ababab">#ababab</color>
+    <color name="gray_515155">#515155</color>
+    <color name="gray_bebebe">#bebebe</color>
+    <color name="gray_c5c5c5">#c5c5c5</color>
+    <color name="gray_e4e2e2">#e4e2e2</color>
+    <color name="gray_c0c0c0">#c0c0c0</color>
+    <color name="gray_323232">#323232</color>
+    <color name="gray_747272">#747272</color>
+    <color name="gray_a5a5a5">#a5a5a5</color>
+    <color name="gray_e7e7e7">#e7e7e7</color>
+    <color name="gray_dadada">#dadada</color>
+    <color name="white_fcfcfc">#fcfcfc</color>
+    <color name="green_3fb653">#3fb653</color>
+    <color name="red_d32b43">#d32b43</color>
+    <color name="black_7d8e9a">#7d8e9a</color>
+    <color name="black_494949">#494949</color>
+    <color name="brown_cf3c0a">#cf3c0a</color>
+    <color name="half_trans_black">#55000000</color>
+</resources>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/overlay_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000001">
+
+        <tv.danmaku.ijk.media.sample.widget.media.IjkVideoView
+            android:id="@+id/player_surface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></tv.danmaku.ijk.media.sample.widget.media.IjkVideoView>
+
+        <FrameLayout
+            android:id="@+id/frame_control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </FrameLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/overlay_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/epg_group"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_livelist_info_layout_height"
+
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/back3"
+                style="@style/gray_666666_30_32"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="false"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true" />
+
+            <RadioButton
+                android:id="@+id/back2"
+                style="@style/gray_666666_30_32"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="false"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true" />
+
+            <RadioButton
+                android:id="@+id/back1"
+                style="@style/gray_666666_30_32"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="false"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true" />
+
+            <RadioButton
+                android:id="@+id/epg"
+                style="@style/blue_0085d1_30_32"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true" />
+        </RadioGroup>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <ListView
+                android:id="@+id/epg_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@android:color/transparent"
+                android:listSelector="@android:color/transparent"
+                android:scrollbarThumbVertical="@android:color/transparent"></ListView>
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

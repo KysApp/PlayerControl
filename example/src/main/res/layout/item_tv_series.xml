@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/width_9">
+
+    <com.kys.player.example.selfview.SongTiTextView
+        android:id="@+id/txt_tv_series"
+        style="@style/black_18"
+        android:layout_width="@dimen/width_34"
+   		android:layout_height="@dimen/width_20"
+        android:layout_gravity="center"
+        android:background="@drawable/tv_series2"
+         />
+
+</FrameLayout>

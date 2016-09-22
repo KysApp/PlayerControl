@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MySlider">
+        <attr name="SlidingDrawer_orientation" format="integer" />
+        <attr name="SlidingDrawer_bottomOffset" format="dimension" />
+        <attr name="SlidingDrawer_topOffset" format="dimension" />
+        <attr name="SlidingDrawer_allowSingleTap" format="boolean" />
+        <attr name="SlidingDrawer_animateOnClick" format="boolean" />
+        <attr name="SlidingDrawer_handle" format="reference" />
+        <attr name="SlidingDrawer_content" format="reference" />
+        <attr name="SlidingDrawer_direction" format="enum">
+            <enum name="leftToRight" value="0" />
+            <enum name="rightToLeft" value="1" />
+            <enum name="topToBottom" value="2" />
+            <enum name="bottomToTop" value="3" />
+        </attr>
+        <!-- and we are going to add a new styleable resource maxHeight -->
+        <attr name="SlidingDrawer_maxHeight" format="dimension" />
+        <attr name="SlidingDrawer_handleOnClick" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ActionBar">
+        <attr name="title" format="string" localization="suggested" />
+    </declare-styleable>
+    <declare-styleable name="board_column">
+        <attr name="column" format="integer" localization="suggested" />
+    </declare-styleable>
+    <attr name="entrySummaries" format="reference" />
+
+    <declare-styleable name="IjkListPreference">
+        <attr name="entrySummaries" />
+    </declare-styleable>
+    <declare-styleable name="SwipeLayout">
+        <attr name="drag_edge" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+            <enum name="top" value="2"/>
+            <enum name="bottom" value="3"/>
+        </attr>
+        <attr name="show_mode" format="enum">
+            <enum name="lay_down" value="0"/>
+            <enum name="pull_out" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

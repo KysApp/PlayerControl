@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/width_18"
+    android:layout_margin="@dimen/horizontal_tag_padding"
+	android:descendantFocusability="blocksDescendants">
+    
+    <com.kys.player.example.selfview.HeiTiTextView
+	    android:id="@+id/text"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_gravity="center"
+	    android:singleLine="true"
+	    android:ellipsize="marquee"
+	    android:layout_margin="@dimen/model_item_padding"
+	    android:marqueeRepeatLimit="marquee_forever"
+	    style="@style/white_24"
+	     />
+
+</LinearLayout>

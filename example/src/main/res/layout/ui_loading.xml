@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_loading"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loading_bg"
+    >
+
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
+    <!--<LinearLayout
+        android:id="@+id/layout_update"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            style="@style/white_28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/loading_update_toast_top"
+            android:text="@string/my_update" />
+
+        <TextView
+            android:id="@+id/txt_update_info"
+            style="@style/white_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/loading_update_info_padding"
+            android:text="@string/laoding_update_toast" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_update_cancel"
+                style="@style/black_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/loading_out"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/btn_update_ok"
+                style="@style/black_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/loading_update_button_left"
+                android:background="@drawable/loading_download"
+                android:gravity="center" />
+        </LinearLayout>
+    </LinearLayout>-->
+
+    <!--<ProgressBar-->
+    <!--android:id="@+id/progressBar1"-->
+    <!--style="?android:attr/progressBarStyleSmall"-->
+    <!--android:layout_width="20dp"-->
+    <!--android:layout_height="20dp"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:indeterminateDrawable="@drawable/my_progress_bar" />-->
+
+
+    <FrameLayout
+        android:id="@+id/timer_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="15dp"
+        android:background="@drawable/guide_skip_box"
+        >
+
+        <TextView
+            style="@style/gray_333434_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:text="@string/skip" />
+
+        <TextView
+            android:id="@+id/time_lost"
+            style="@style/red_e55848_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:text="1"/>
+    </FrameLayout>
+</RelativeLayout>
