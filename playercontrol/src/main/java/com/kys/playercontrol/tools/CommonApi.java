@@ -336,8 +336,6 @@ public class CommonApi {
 
     /**
      * urldecode解码
-     *
-     * @param
      * @return
      */
     public static String urlDecode(String s) {
@@ -356,8 +354,6 @@ public class CommonApi {
 
     /**
      * 获取屏幕大小
-     *
-     * @param
      * @return
      */
     public static DisplayMetrics getMetrics(Activity activity) {

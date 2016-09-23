@@ -30,8 +30,4 @@ public class WeakHandler<T> extends Handler {
     public WeakHandler(T owner) {
         mOwner = new WeakReference<T>(owner);
     }
-
-    public T getOwner() {
-        return mOwner.get();
-    }
 }
