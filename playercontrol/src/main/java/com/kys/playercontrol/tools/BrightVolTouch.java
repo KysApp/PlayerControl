@@ -17,15 +17,13 @@ import com.kys.playercontrol.R;
 public class BrightVolTouch {
 
     //音量控制
-    public static int doVolumeTouch(Activity mContext, float y_changed,
+    public static int doVolumeTouch(float y_changed,
                                      int mSurfaceYDisplayRange, int mAudioMax, float mVol,
-                                     AudioManager mAudioManager, SeekBar mVolumeSeekbar) {
+                                     AudioManager mAudioManager) {
         int delta = -(int) ((y_changed / mSurfaceYDisplayRange) * mAudioMax);
         int vol = (int) Math.min(Math.max(mVol + delta, 0), mAudioMax);
         if (delta != 0) {
             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
-            mVolumeSeekbar.setProgress(vol * mVolumeSeekbar.getMax()
-                    / mAudioMax);
             return vol;
         } else {
             return 0;

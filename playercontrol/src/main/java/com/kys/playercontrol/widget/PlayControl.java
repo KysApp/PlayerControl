@@ -58,7 +58,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private View mOverlayContent;
     private View mOverlayPlayer;
     private View mOverlayBuffer;
-    private SeekBar mSeekbar, mVolumeSeekbar;
+    private SeekBar mSeekbar;
     private TextView mTitle;
     private TextView mSysTime;
     private ImageView btn_back;
@@ -224,14 +224,10 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         layout_seekbar = (LinearLayout) findViewById(R.id.layout_seekbar);
         mSeekbar = (SeekBar) findViewById(R.id.player_overlay_seekbar);
         mSeekbar.setOnSeekBarChangeListener(mSeekListener);
-        mVolumeSeekbar = (SeekBar) findViewById(R.id.volume_seekbar);
-        mVolumeSeekbar.setOnSeekBarChangeListener(mVolumeSeekListener);
 
         mAudioManager = (AudioManager) mContext.getSystemService(mContext.AUDIO_SERVICE);
         mAudioMax = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         mVol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mVolumeSeekbar
-                .setProgress((int) (mVol * mVolumeSeekbar.getMax() / mAudioMax));
 
         mContext.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         layout_bookmark = (LinearLayout) findViewById(R.id.layout_bookmark);
@@ -560,7 +556,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         // Update all view elements
         if (listener != null) {
             time = listener.onCurrentPosition();
-            listener.onVideoLength();
+            length = listener.onVideoLength();
         }
         mSeekbar.setMax(length);
         mSeekbar.setProgress(time);
@@ -802,8 +798,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 // Audio
                 mTouchY = event.getRawY();
                 mVol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                mVolumeSeekbar
-                        .setProgress((int) (mVol * mVolumeSeekbar.getMax() / mAudioMax));
                 mIsAudioOrBrightnessChanged = false;
                 // Seek
                 mTouchX = event.getRawX();
@@ -917,8 +911,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     //音量控制
     public void doVolumeTouch(float y_changed) {
-        int vol = BrightVolTouch.doVolumeTouch(mContext, y_changed, mSurfaceYDisplayRange, mAudioMax, mVol, mAudioManager, mVolumeSeekbar);
-        if(vol != 0) {
+        int vol = BrightVolTouch.doVolumeTouch(y_changed, mSurfaceYDisplayRange, mAudioMax, mVol, mAudioManager);
+        if(vol != 0 && vol > 0) {
             mIsAudioOrBrightnessChanged = true;
             showInfo(
                     mContext.getString(R.string.volume) + '\u00A0'
