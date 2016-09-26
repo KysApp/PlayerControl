@@ -30,11 +30,11 @@ public interface OnPlayerControlListener {
 
     public abstract void onState(boolean isPlaying);
 
-    public abstract void onVideoLength();
+    public abstract int onVideoLength();
 
-    public abstract void onCurrentPosition();
+    public abstract int onCurrentPosition();
 
-    public abstract void onTouchCurrentPosition();
+    public abstract int onTouchCurrentPosition();
 
     public abstract boolean canShowProgress();
 

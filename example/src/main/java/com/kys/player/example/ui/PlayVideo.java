@@ -71,8 +71,7 @@ public class PlayVideo extends Activity {
         if (mPlayControl != null) {
             mPlayControl.onBackPressed();
         } else {
-            mSurface.stopPlayback();
-            super.onBackPressed();
+            finished();
         }
     }
 
@@ -867,6 +866,7 @@ public class PlayVideo extends Activity {
         mPlayControl = new PlayControl(this, mOverlayPlayer, mOverlayContent, 0);
         mPlayControl.setOnPlayerControlListener(mPlayerControlListener);
         mPlayControl.setDefinition(definition);
+
         mPlayerControlListener.isSmallVolBri();
         mProgressBar = (ProgressBar) mPlayControl.findViewById(R.id.progressBar);
         frame_control.addView((View) mPlayControl);
@@ -976,7 +976,7 @@ public class PlayVideo extends Activity {
     }
 
     //播放控制层监听
-    private final OnPlayerControlListener mPlayerControlListener = new OnPlayerControlListener() {
+    public final OnPlayerControlListener mPlayerControlListener = new OnPlayerControlListener() {
         @Override
         public void onPlayPause() {     //播放按钮监听
             if (mSurface.isPlaying()) {
@@ -992,39 +992,33 @@ public class PlayVideo extends Activity {
 
         @Override
         public void onSeekTo(int delta) {       //播放器进度监听
-            // unseekable stream
             if (mSurface.getDuration() <= 0)
                 return;
             if (delta < 0)
                 delta = 0;
-            mSurface.seekTo(delta);
             mPlayControl.setState(mSurface.isPlaying());
             mPlayControl.onSeekTo(delta);
         }
 
         @Override
         public void onState(boolean isPlaying) {        //播放状态监听
-            if (isPlaying) {
-                mSurface.start();
-            } else {
-                mSurface.pause();
-            }
             mPlayControl.setState(mSurface.isPlaying());
         }
 
         @Override
-        public void onVideoLength() {       //获取视频时长
+        public int onVideoLength() {       //获取视频时长
             mPlayControl.setVideoLength(mSurface.getDuration());
+            return mSurface.getDuration();
         }
 
         @Override
-        public void onCurrentPosition() {       //获取当前播放进度
-            mPlayControl.setCurrentPosition(mSurface.getCurrentPosition());
+        public int onCurrentPosition() {       //获取当前播放进度
+            return mSurface.getCurrentPosition();
         }
 
         @Override
-        public void onTouchCurrentPosition() {      //获取当前播放进度
-            mPlayControl.setTouchCurrentPosition(mSurface.getCurrentPosition());
+        public int onTouchCurrentPosition() {      //获取当前播放进度
+            return mSurface.getCurrentPosition();
         }
 
         @Override
@@ -1109,9 +1103,7 @@ public class PlayVideo extends Activity {
 
         @Override
         public void setOnBackPressed() {        //退出当前Activity
-            mSurface.stopPlayback();
-            getApplicationContext().unbindService(serviceConnection);
-            finish();
+            finished();
         }
 
         @Override
@@ -1148,6 +1140,12 @@ public class PlayVideo extends Activity {
         }
 
     };
+
+    public void finished(){
+        mSurface.stopPlayback();
+        getApplicationContext().unbindService(serviceConnection);
+        super.onBackPressed();
+    }
 
     //DLNA设备获取监听
     public class DeviceListRegistryListener extends DefaultRegistryListener {

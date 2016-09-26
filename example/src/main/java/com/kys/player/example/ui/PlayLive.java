@@ -403,7 +403,7 @@ public class PlayLive extends Activity implements OnClickListener,
                 screenWidth, screenWidth * 9 / 16));
         mSurface = (IjkVideoView) findViewById(R.id.player_surface);
         frame_control = (FrameLayout) findViewById(R.id.frame_control);
-        mPlayControl = new PlayControl(this, mOverlayPlayer, mOverlayContent, 1);
+        mPlayControl = new PlayControl(this, mOverlayPlayer, mOverlayContent, true, 1);
         mPlayControl.setOnPlayerControlListener(mPlayerControlListener);
         frame_control.addView((View) mPlayControl);
         mSurface.setOnPreparedListener(mOnPreparedListener);
@@ -715,18 +715,19 @@ public class PlayLive extends Activity implements OnClickListener,
         }
 
         @Override
-        public void onVideoLength() {
+        public int onVideoLength() {       //获取视频时长
             mPlayControl.setVideoLength(mSurface.getDuration());
+            return mSurface.getDuration();
         }
 
         @Override
-        public void onCurrentPosition() {
-            mPlayControl.setCurrentPosition(mSurface.getCurrentPosition());
+        public int onCurrentPosition() {       //获取当前播放进度
+            return mSurface.getCurrentPosition();
         }
 
         @Override
-        public void onTouchCurrentPosition() {
-            mPlayControl.setTouchCurrentPosition(mSurface.getCurrentPosition());
+        public int onTouchCurrentPosition() {      //获取当前播放进度
+            return mSurface.getCurrentPosition();
         }
 
         @Override

@@ -2,18 +2,14 @@ package com.kys.playercontrol.widget;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Message;
-import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -31,15 +26,17 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.kys.playercontrol.PopupWindows;
 import com.kys.playercontrol.R;
 import com.kys.playercontrol.interfaces.IPlayerControl;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
+import com.kys.playercontrol.tools.BrightVolTouch;
 import com.kys.playercontrol.tools.CommonApi;
+import com.kys.playercontrol.tools.GetScreenRotation;
 
 import org.videolan.vlc.Util;
 import org.videolan.vlc.WeakHandler;
 
-import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
@@ -61,16 +58,13 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private View mOverlayContent;
     private View mOverlayPlayer;
     private View mOverlayBuffer;
-    private View mOverlayVolume;
     private SeekBar mSeekbar, mVolumeSeekbar;
     private TextView mTitle;
     private TextView mSysTime;
-    private TextView mBattery;
     private ImageView btn_back;
-    private TextView mTime;
+    public TextView mTime;
     private TextView mLength;
     private TextView mInfo;
-    private TextView txt_select, txt_refresh;
     private boolean mEnableBrightnessGesture;
     private boolean mDisplayRemainingTime = false;
     private static final int OVERLAY_TIMEOUT = 4000;
@@ -105,31 +99,19 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private boolean isDefinShow = false;
     PopupWindow popupChannelInfo, popupTvInfo, popupShareTv, popuDefinition;
     private ImageView player_overlay_play;
-    private boolean StartFromPause = false;//当用户从其它界面回来时，该参数为true
-    private ListView mDmrLv, list_channel;
-    private LinearLayout layout_refresh;
     private LinearLayout layout_bookmark;
     private TextView txt_last_time, txt_last_play_time;
     private RelativeLayout layout_vol_bright, layout_small_vol_bright;
     private ImageView img_brigth, img_volume;
-    private String definition = "1";
     public ImageView img_play_defi;
     private boolean isFullOrSmall;
     private LinearLayout layout_seekbar;
     private boolean mEnableWheelbar;
     private ImageView img_bookmark_cancel;
     public boolean isLive = true;
-    private OnPlayerControlListener listener = null;
+    public OnPlayerControlListener listener = null;
     private int length = 0;
     private boolean isPlaying;
-
-    public PlayControl(Activity context) {
-        super(context);
-        mContext = context;
-        screenWidth = CommonApi.getScreenWidth(mContext);
-        LayoutInflater.from(context).inflate(R.layout.player, this, true);
-        initPlayer();
-    }
 
     public PlayControl(Activity context, View view1, View view2, int come) {
         super(context);
@@ -142,10 +124,11 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         initPlayer();
     }
 
-    public PlayControl(Activity context, View view, boolean isLive, int come) {
+    public PlayControl(Activity context, View view1, View view2, boolean isLive, int come) {
         super(context);
         mContext = context;
-        mOverlayContent = view;
+        mOverlayPlayer = view1;
+        mOverlayContent = view2;
         this.isLive = isLive;
         STATE_VOD_LIVE = come;
         screenWidth = CommonApi.getScreenWidth(mContext);
@@ -197,9 +180,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 sWidth, sWidth * 9 / 16));
         mOverlayBuffer = findViewById(R.id.player_overlay_buffer);
 
-        mOverlayVolume = findViewById(R.id.player_overlay_volume);
-        mOverlayVolume.setVisibility(View.GONE);
-
 		/* header */
         mTitle = (TextView) findViewById(R.id.player_overlay_title);
         mTitle.setGravity(Gravity.CENTER);
@@ -243,7 +223,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
         layout_seekbar = (LinearLayout) findViewById(R.id.layout_seekbar);
         mSeekbar = (SeekBar) findViewById(R.id.player_overlay_seekbar);
-        mSeekbar.setVisibility(View.GONE);
         mSeekbar.setOnSeekBarChangeListener(mSeekListener);
         mVolumeSeekbar = (SeekBar) findViewById(R.id.volume_seekbar);
         mVolumeSeekbar.setOnSeekBarChangeListener(mVolumeSeekListener);
@@ -273,111 +252,36 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     //DLNA设备展现
     private void intPopupShareTv() {
         // TODO Auto-generated method stub
-        View popupView = LayoutInflater.from(mContext).inflate(
-                R.layout.popup_share_tv, null);
-        txt_select = (TextView) popupView.findViewById(R.id.txt_select);
-        txt_select.setText(getResources().getString(R.string.select_dlna));
-        txt_refresh = (TextView) popupView.findViewById(R.id.txt_refresh);
-        layout_refresh = (LinearLayout) popupView.findViewById(R.id.layout_refresh);
-        layout_refresh.setOnClickListener(new OnClickListioners("mDlanRefresh"));
-        share_progressBar = popupView.findViewById(R.id.share_progressBar);
-        //重新搜索设备
-        popupView.setFocusableInTouchMode(true);
-        popupShareTv = new PopupWindow(popupView, (int) getResources().getDimension(R.dimen.play_share_tv_width),
-                (int) getResources().getDimension(R.dimen.play_share_tv_height));
-        popupShareTv.setFocusable(true);
-        mDmrLv = (ListView) popupView.findViewById(R.id.mListView);
-        popupShareTv.setBackgroundDrawable(new BitmapDrawable());
-        popupShareTv.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        if(listener != null)
-            listener.setDlna(mDmrLv);
+        popupShareTv = new PopupWindow(mContext);
+        PopupWindows.intPopupShareTv(mContext, popupShareTv, listener);
     }
 
     //频道弹窗
     private void intPopupChannelInfo() {
         // TODO Auto-generated method stub
-        View popupView = LayoutInflater.from(mContext).inflate(
-                R.layout.popup_play_model, null);
-        int screenWidth = CommonApi.getScreenWidth(mContext);
-        int screenHeight = CommonApi.getScreenHeight(mContext);
-        popupChannelInfo = new PopupWindow(popupView, screenWidth / 3,
-                screenHeight / 3 * 2);
-        popupChannelInfo.setFocusable(true);
-        popupChannelInfo.setBackgroundDrawable(new BitmapDrawable());
-
-        list_channel = (ListView) popupView.findViewById(R.id.list);
-        popupChannelInfo.showAsDropDown(mContext
-                .findViewById(R.id.img_play_channel));
-        if(listener != null)
-            listener.setChannelList(list_channel);
+        popupChannelInfo = new PopupWindow(mContext);
+        PopupWindows.intPopupChannelInfo(mContext, popupChannelInfo, mContext.findViewById(R.id.img_play_channel), listener);
     }
 
     //全屏选集弹窗
     private void intPopupTvInfo() {
         // TODO Auto-generated method stub
-        View popupView = LayoutInflater.from(mContext).inflate(
-                R.layout.popup_play_tv, null);
-        TextView txt_select = (TextView) popupView.findViewById(R.id.txt_select);
-        txt_select.setText(getResources().getString(R.string.select_series));
-        int sWidth = CommonApi.getScreenWidth(mContext);
-        int sHeight = CommonApi.getScreenHeight(mContext);
-        popupTvInfo = new PopupWindow(popupView, sWidth / 4,
-                sHeight / 3 * 2);
-        popupTvInfo.setFocusable(true);
-        GridView mGridView = (GridView) popupView.findViewById(R.id.mGridView);
-        popupTvInfo.setBackgroundDrawable(new BitmapDrawable());
-        popupTvInfo.showAsDropDown(mContext
-                .findViewById(R.id.id_location));
-        if(listener != null)
-            listener.setSeries(mGridView);
+        popupTvInfo = new PopupWindow(mContext);
+        PopupWindows.intPopupTvInfo(mContext, popupTvInfo, mContext.findViewById(R.id.id_location), listener);
     }
 
     //清晰度切换
     private void intDefinition() {
-        View mView = LayoutInflater.from(mContext).inflate(R.layout.popup_play_definition, null);
-        ListView mListView = (ListView) mView.findViewById(R.id.list);
-        int popuWidth = getResources().getDimensionPixelOffset(R.dimen.width_61);
-        int popuHeight = getResources().getDimensionPixelOffset(R.dimen.width_30) * 3;
-        popuDefinition = new PopupWindow(mView, popuWidth,
-                popuHeight);
-        popuDefinition.setFocusable(true);
-        popuDefinition.setBackgroundDrawable(new BitmapDrawable());
-        int[] location = new int[2];
-        View id_defi = mContext.findViewById(R.id.id_defi);
-        id_defi.getLocationOnScreen(location);
-        popuDefinition.showAtLocation(id_defi, Gravity.NO_GRAVITY,
-                location[0] - getResources().getDimensionPixelOffset(R.dimen.width_8),
-                location[1] - popuDefinition.getHeight());
-        if(listener != null)
-            listener.setDefinition(mListView);
+        popuDefinition = new PopupWindow(mContext);
+        PopupWindows.intDefinition(mContext, popuDefinition, mContext.findViewById(R.id.id_defi), listener);
     }
 
     private int time = 0;
     private int mCurrentTime = 0;
 
-    @SuppressWarnings("deprecation")
-    private int getScreenRotation() {
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO /*
-                                                                 * Android 2.2
-																 * has
-																 * getRotation
-																 */) {
-            try {
-                Method m = display.getClass().getDeclaredMethod("getRotation");
-                return (Integer) m.invoke(display);
-            } catch (Exception e) {
-                return Surface.ROTATION_0;
-            }
-        } else {
-            return display.getOrientation();
-        }
-    }
-
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private int getScreenOrientation() {
-        switch (getScreenRotation()) {
+        switch (GetScreenRotation.getScreenRotation(mContext)) {
             case Surface.ROTATION_0:
                 return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
             case Surface.ROTATION_90:
@@ -402,37 +306,16 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public void onConfigurationChanged(Configuration newConfig) {
         // TODO Auto-generated method stub
         super.onConfigurationChanged(newConfig);
+        hideOverlay(true);
         if (newConfig != null) {
             if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && !isFullOrSmall) {
                 mContext.getWindow()
                         .addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 mSize.setVisibility(View.GONE);
-                player_overlay_play.setVisibility(View.GONE);
-                // img_play_model.setVisibility(View.VISIBLE);
-                img_play_channel.setVisibility(View.VISIBLE);
-                mOverlayHeader.setVisibility(View.VISIBLE);
                 mOverlayContent.setVisibility(View.GONE);
-                mOverlayVolume.setVisibility(View.GONE);
+                mOverlayHeader.setVisibility(View.VISIBLE);
+                img_play_channel.setVisibility(View.VISIBLE);
                 mLock.setVisibility(View.VISIBLE);
-                if(STATE_VOD_LIVE == 1) {
-                    if (isLive) {
-                        mSeekbar.setVisibility(View.INVISIBLE);
-                        mTime.setVisibility(View.INVISIBLE);
-                        mLength.setVisibility(View.INVISIBLE);
-                        player_overlay_play.setVisibility(View.INVISIBLE);
-                    } else {
-                        mSeekbar.setVisibility(View.VISIBLE);
-                        mTime.setVisibility(View.VISIBLE);
-                        mLength.setVisibility(View.VISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
-                    }
-                }
-                if(STATE_VOD_LIVE == 0) {
-                    mSeekbar.setVisibility(View.VISIBLE);
-                    mTime.setVisibility(View.VISIBLE);
-                    mLength.setVisibility(View.VISIBLE);
-                    player_overlay_play.setVisibility(View.VISIBLE);
-                }
                 int sWidth = CommonApi.getScreenWidth(mContext);
                 int sHeight = CommonApi.getScreenHeight(mContext);
                 ViewGroup.LayoutParams mLayoutParams = this.getLayoutParams();
@@ -452,39 +335,16 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 mOverlayPlayer.setLayoutParams(layoutParams);
                 mOverlayPlayer.requestLayout();
                 if (listener != null) {
-                    listener.onVideoLength();
+                    length = listener.onVideoLength();
                     listener.isFullVolBri();
                 }
             } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && isFullOrSmall) {
                 mContext.getWindow().clearFlags(
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 mSize.setVisibility(View.VISIBLE);
-                player_overlay_play.setVisibility(View.VISIBLE);
-                // img_play_model.setVisibility(View.GONE);
-                img_play_channel.setVisibility(View.GONE);
-                mOverlayHeader.setVisibility(View.VISIBLE);
                 mOverlayContent.setVisibility(View.VISIBLE);
-                mOverlayVolume.setVisibility(View.GONE);
-                mLock.setVisibility(View.GONE);
-                if(STATE_VOD_LIVE == 1) {
-                    if (isLive) {
-                        mSeekbar.setVisibility(View.INVISIBLE);
-                        mTime.setVisibility(View.INVISIBLE);
-                        mLength.setVisibility(View.INVISIBLE);
-                        player_overlay_play.setVisibility(View.INVISIBLE);
-                    } else {
-                        mSeekbar.setVisibility(View.INVISIBLE);
-                        mTime.setVisibility(View.INVISIBLE);
-                        mLength.setVisibility(View.INVISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
-                    }
-                }
-                if(STATE_VOD_LIVE == 0) {
-                    mSeekbar.setVisibility(View.VISIBLE);
-                    mTime.setVisibility(View.VISIBLE);
-                    mLength.setVisibility(View.VISIBLE);
-                    player_overlay_play.setVisibility(View.VISIBLE);
-                }
+                mOverlayHeader.setVisibility(View.VISIBLE);
+                img_play_channel.setVisibility(View.GONE);
                 int sWidth = CommonApi.getScreenWidth(mContext);
                 ViewGroup.LayoutParams mLayoutParams = this.getLayoutParams();
                 mLayoutParams.width = sWidth;
@@ -524,60 +384,51 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             mShowing = true;
             mOverlayInterface.setVisibility(View.VISIBLE);
             dimStatusBar(false);
-            switch (getScreenRotation()) {
+            switch (GetScreenRotation.getScreenRotation(mContext)) {
                 case Surface.ROTATION_0:
-                    mOverlayHeader.setVisibility(View.VISIBLE);
                     mLock.setVisibility(View.GONE);
-                    if (STATE_VOD_LIVE == 1){
-                        if (isLive) {
-                            mSeekbar.setVisibility(View.INVISIBLE);
-                            mTime.setVisibility(View.INVISIBLE);
-                            mLength.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.INVISIBLE);
-                        } else {
-
-                            mSeekbar.setVisibility(View.INVISIBLE);
-                            mTime.setVisibility(View.INVISIBLE);
-                            mLength.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
-                        }
-                    }
+                    mOverlayHeader.setVisibility(View.VISIBLE);
                     mOverlayProgress.setVisibility(View.VISIBLE);
-                case Surface.ROTATION_180:
-                    mOverlayHeader.setVisibility(View.VISIBLE);
-                    mLock.setVisibility(View.GONE);
-                    if ((STATE_VOD_LIVE == 1)) {
+                    if(STATE_VOD_LIVE == 1) {
                         if (isLive) {
-                            mSeekbar.setVisibility(View.INVISIBLE);
-                            mTime.setVisibility(View.INVISIBLE);
-                            mLength.setVisibility(View.INVISIBLE);
+                            layout_seekbar.setVisibility(View.INVISIBLE);
                             player_overlay_play.setVisibility(View.INVISIBLE);
                         } else {
-                            mSeekbar.setVisibility(View.INVISIBLE);
-                            mTime.setVisibility(View.INVISIBLE);
-                            mLength.setVisibility(View.INVISIBLE);
+                            layout_seekbar.setVisibility(View.INVISIBLE);
                             player_overlay_play.setVisibility(View.VISIBLE);
                         }
                     }
-                    if ((STATE_VOD_LIVE == 0)) {
+                    if(STATE_VOD_LIVE == 0) {
                         img_play_channel.setVisibility(View.GONE);
                         mOverlayProgress.setVisibility(View.VISIBLE);
-                        mSeekbar.setVisibility(View.GONE);
-                        mTime.setVisibility(View.GONE);
-                        mLength.setVisibility(View.GONE);
-                        mOverlayHeader.setVisibility(View.VISIBLE);
+                        layout_seekbar.setVisibility(View.INVISIBLE);
+                        player_overlay_play.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case Surface.ROTATION_180:
+                    mLock.setVisibility(View.GONE);
+                    mOverlayHeader.setVisibility(View.VISIBLE);
+                    mOverlayProgress.setVisibility(View.VISIBLE);
+                    if(STATE_VOD_LIVE == 1) {
+                        if (isLive) {
+                            layout_seekbar.setVisibility(View.INVISIBLE);
+                            player_overlay_play.setVisibility(View.INVISIBLE);
+                        } else {
+                            layout_seekbar.setVisibility(View.INVISIBLE);
+                            player_overlay_play.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    if(STATE_VOD_LIVE == 0) {
+                        img_play_channel.setVisibility(View.GONE);
+                        mOverlayProgress.setVisibility(View.VISIBLE);
+                        layout_seekbar.setVisibility(View.INVISIBLE);
                         player_overlay_play.setVisibility(View.VISIBLE);
                     }
                     break;
                 case Surface.ROTATION_90:
-                case Surface.ROTATION_270:
                     if (mIsLocked) {
                         img_play_channel.setVisibility(View.VISIBLE);
-                        mLength.setVisibility(View.VISIBLE);
-                        mTime.setVisibility(View.VISIBLE);
-                        mSeekbar.setVisibility(View.VISIBLE);
-                        mTime.setVisibility(View.VISIBLE);
-                        mLength.setVisibility(View.VISIBLE);
+                        layout_seekbar.setVisibility(View.VISIBLE);
                         mOverlayHeader.setVisibility(View.VISIBLE);
                         mOverlayProgress.setVisibility(View.VISIBLE);
                         player_overlay_play.setVisibility(View.VISIBLE);
@@ -585,24 +436,44 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                         img_play_channel.setVisibility(View.VISIBLE);
                         mOverlayHeader.setVisibility(View.VISIBLE);
                         mOverlayProgress.setVisibility(View.VISIBLE);
-                        if (STATE_VOD_LIVE == 1) {
+                        if(STATE_VOD_LIVE == 1) {
                             if (isLive) {
-                                mSeekbar.setVisibility(View.INVISIBLE);
-                                mTime.setVisibility(View.INVISIBLE);
-                                mLength.setVisibility(View.INVISIBLE);
+                                layout_seekbar.setVisibility(View.INVISIBLE);
                                 player_overlay_play.setVisibility(View.INVISIBLE);
                             } else {
-                                mSeekbar.setVisibility(View.VISIBLE);
-                                mTime.setVisibility(View.VISIBLE);
-                                mLength.setVisibility(View.VISIBLE);
+                                layout_seekbar.setVisibility(View.VISIBLE);
                                 player_overlay_play.setVisibility(View.VISIBLE);
                             }
                         }
-                        if (STATE_VOD_LIVE == 0) {
-                            mTime.setVisibility(View.VISIBLE);
-                            mSeekbar.setVisibility(View.VISIBLE);
-                            mTime.setVisibility(View.VISIBLE);
-                            mLength.setVisibility(View.VISIBLE);
+                        if(STATE_VOD_LIVE == 0) {
+                            layout_seekbar.setVisibility(View.VISIBLE);
+                            player_overlay_play.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    mLock.setVisibility(View.VISIBLE);
+                    break;
+                case Surface.ROTATION_270:
+                    if (mIsLocked) {
+                        img_play_channel.setVisibility(View.VISIBLE);
+                        layout_seekbar.setVisibility(View.VISIBLE);
+                        mOverlayHeader.setVisibility(View.VISIBLE);
+                        mOverlayProgress.setVisibility(View.VISIBLE);
+                        player_overlay_play.setVisibility(View.VISIBLE);
+                    } else {
+                        img_play_channel.setVisibility(View.VISIBLE);
+                        mOverlayHeader.setVisibility(View.VISIBLE);
+                        mOverlayProgress.setVisibility(View.VISIBLE);
+                        if(STATE_VOD_LIVE == 1) {
+                            if (isLive) {
+                                layout_seekbar.setVisibility(View.INVISIBLE);
+                                player_overlay_play.setVisibility(View.INVISIBLE);
+                            } else {
+                                layout_seekbar.setVisibility(View.VISIBLE);
+                                player_overlay_play.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if(STATE_VOD_LIVE == 0) {
+                            layout_seekbar.setVisibility(View.VISIBLE);
                             player_overlay_play.setVisibility(View.VISIBLE);
                         }
                     }
@@ -636,6 +507,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             mOverlayHeader.setVisibility(View.INVISIBLE);
             mOverlayProgress.setVisibility(View.INVISIBLE);
             mOverlayInterface.setVisibility(View.INVISIBLE);
+            layout_seekbar.setVisibility(View.INVISIBLE);
             layout_vol_bright.setVisibility(View.GONE);
             layout_small_vol_bright.setVisibility(View.GONE);
             mShowing = false;
@@ -687,7 +559,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private int setOverlayProgress() {
         // Update all view elements
         if (listener != null) {
-            listener.onCurrentPosition();
+            time = listener.onCurrentPosition();
             listener.onVideoLength();
         }
         mSeekbar.setMax(length);
@@ -755,7 +627,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         // TODO Auto-generated method stub
          if (isFullOrSmall) {
              //全屏时切换至小屏播放
-            switch (getScreenRotation()) {
+            switch (GetScreenRotation.getScreenRotation(mContext)) {
                 case Surface.ROTATION_90:
                 case Surface.ROTATION_270:
                     // SCREEN_ORIENTATION_REVERSE_LANDSCAPE only available since API
@@ -847,7 +719,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
      * @param text
      * @param duration
      */
-    private void showInfo(String text, int duration) {
+    public void showInfo(String text, int duration) {
         mInfo.setVisibility(View.VISIBLE);
         mInfo.setText(text);
         mHandler.removeMessages(FADE_OUT_INFO);
@@ -936,7 +808,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 // Seek
                 mTouchX = event.getRawX();
                 if(listener != null) {
-                    listener.onTouchCurrentPosition();
+                    mCurrentTime = listener.onTouchCurrentPosition();
                 }
                 break;
 
@@ -1045,12 +917,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     //音量控制
     public void doVolumeTouch(float y_changed) {
-        int delta = -(int) ((y_changed / mSurfaceYDisplayRange) * mAudioMax);
-        int vol = (int) Math.min(Math.max(mVol + delta, 0), mAudioMax);
-        if (delta != 0) {
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
-            mVolumeSeekbar.setProgress(vol * mVolumeSeekbar.getMax()
-                    / mAudioMax);
+        int vol = BrightVolTouch.doVolumeTouch(mContext, y_changed, mSurfaceYDisplayRange, mAudioMax, mVol, mAudioManager, mVolumeSeekbar);
+        if(vol != 0) {
             mIsAudioOrBrightnessChanged = true;
             showInfo(
                     mContext.getString(R.string.volume) + '\u00A0'
@@ -1058,43 +926,13 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         }
     }
 
-    //亮度控制
-    public void initBrightnessTouch() {
-        float brightnesstemp = 0.01f;
-        // Initialize the layoutParams screen brightness
-        try {
-            brightnesstemp = Settings.System.getInt(
-                    mContext.getContentResolver(),
-                    Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
-        } catch (Settings.SettingNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        WindowManager.LayoutParams lp = mContext.getWindow().getAttributes();
-        lp.screenBrightness = brightnesstemp;
-        mContext.getWindow().setAttributes(lp);
-        mIsFirstBrightnessGesture = false;
-    }
-
     public void doBrightnessTouch(float y_changed) {
-        if (mIsFirstBrightnessGesture)
-            initBrightnessTouch();
-        mIsAudioOrBrightnessChanged = true;
-
-        // Set delta : 0.07f is arbitrary for now, it possibly will change in
-        // the future
-        float delta = -y_changed / mSurfaceYDisplayRange * 0.07f;
-
-        // Estimate and adjust Brightness
-        WindowManager.LayoutParams lp = mContext.getWindow().getAttributes();
-        lp.screenBrightness = Math.min(
-                Math.max(lp.screenBrightness + delta, 0.01f), 1);
-
-        // Set Brightness
-        mContext.getWindow().setAttributes(lp);
+        mIsFirstBrightnessGesture = false;
+        float screenBrightness = BrightVolTouch.doBrightnessTouch(mContext, y_changed, mIsFirstBrightnessGesture, mSurfaceYDisplayRange);
+        mIsFirstBrightnessGesture = true;
         showInfo(
                 mContext.getString(R.string.brightness) + '\u00A0'
-                        + Math.round(lp.screenBrightness * 15), 1000);
+                        + Math.round(screenBrightness * 15), 1000);
     }
 
     @Override
@@ -1129,16 +967,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     @Override
     public void setDlnaRefresh(boolean show) {
-
-        if(show){
-            if (share_progressBar != null)
-                share_progressBar.setVisibility(View.VISIBLE);
-            txt_refresh.setText("点击重新刷新");
-        }else{
-            if (share_progressBar != null)
-                share_progressBar.setVisibility(View.GONE);
-        }
-
+        PopupWindows.setDlnaRefresh(show);
     }
 
     @Override
@@ -1149,16 +978,12 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @Override
     public void setDefinition(String string) {
         if(string.equals("1")){
-            definition = "1";
             img_play_defi.setImageResource(R.drawable.live_sd);
         }else if(string.equals("2")){
-            definition = "2";
             img_play_defi.setImageResource(R.drawable.live_hd);
         }else if(string.equals("4")){
-            definition = "4";
             img_play_defi.setImageResource(R.drawable.live_vhd);
         }else{
-            definition = "1";
             img_play_defi.setImageResource(R.drawable.live_sd);
         }
     }
@@ -1214,7 +1039,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @Override
     public void setVideoLength(int length) {
         if(this.length == 0 && length > 0) {
-            this.length = length;
             mSeekbar.setMax(length);
             setOverlayProgress();
         }
@@ -1306,7 +1130,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                     }
                     break;
                 case "mSizeListener":
-                    switch (getScreenRotation()) {
+                    switch (GetScreenRotation.getScreenRotation(mContext)) {
                         case Surface.ROTATION_0:
                         case Surface.ROTATION_180:
                             mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
