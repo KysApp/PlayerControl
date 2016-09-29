@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Message;
-import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,24 +19,22 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.kys.playercontrol.PopupWindows;
+import com.kys.playercontrol.customview.PopupWindows;
 import com.kys.playercontrol.R;
 import com.kys.playercontrol.interfaces.IPlayerControl;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
 import com.kys.playercontrol.tools.BrightVolTouch;
 import com.kys.playercontrol.tools.CommonApi;
 import com.kys.playercontrol.tools.GetScreenRotation;
+import com.kys.playercontrol.tools.SeekProgress;
 
 import org.videolan.vlc.Util;
 import org.videolan.vlc.WeakHandler;
-
-import java.util.Date;
 
 /**
  * Created by 幻云紫日 on 2016/9/1.
@@ -54,10 +51,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public View mProgressBar, share_progressBar;
     private View mOverlayHeader;
     private View mOverlayProgress;
-    private View mOverlayInterface;
     private View mOverlayContent;
     private View mOverlayPlayer;
-    private View mOverlayBuffer;
     private SeekBar mSeekbar;
     private TextView mTitle;
     private TextView mSysTime;
@@ -80,18 +75,12 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private boolean mIsLocked = false;
     private ImageView mLock;
     private ImageView mSize;
-    // Volume
     private AudioManager mAudioManager;
     private int mAudioMax;
-
-    // Volume Or Brightness
     private boolean mIsAudioOrBrightnessChanged;
     private int mSurfaceYDisplayRange;
     private float mTouchY, mTouchX, mVol;
-
-    // Brightness
     private boolean mIsFirstBrightnessGesture = true;
-
     int screenWidth;
     public ImageView img_play_channel, img_play_dlna, img_play_favorite, img_play_share;
     private boolean isChannelShow = false;
@@ -147,7 +136,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private void initPlayer() {
         // TODO Auto-generated method stub
         mContext.setRequestedOrientation(mScreenOrientation != 100 ? mScreenOrientation
-                : getScreenOrientation());
+                : GetScreenRotation.getScreenOrientation(mContext));
         // 100 is the value for screen_orientation_start_lock
         if (org.videolan.vlc.Util.isICSOrLater())
             mContext.getWindow()
@@ -171,14 +160,12 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         /** initialize Views an their Events */
         mOverlayHeader = findViewById(R.id.player_overlay_header);
         mOverlayProgress = findViewById(R.id.progress_overlay);
-        mOverlayInterface = findViewById(R.id.interface_overlay);
         mProgressBar = findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.GONE);
 
         int sWidth = CommonApi.getScreenWidth(mContext);
         this.setLayoutParams(new ViewGroup.LayoutParams(
                 sWidth, sWidth * 9 / 16));
-        mOverlayBuffer = findViewById(R.id.player_overlay_buffer);
 
 		/* header */
         mTitle = (TextView) findViewById(R.id.player_overlay_title);
@@ -193,8 +180,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         mTime.setOnClickListener(new OnClickListioners("mRemainingTimeListener"));
         mLength = (TextView) findViewById(R.id.player_overlay_length);
         mLength.setOnClickListener(new OnClickListioners("mRemainingTimeListener"));
-        mTime.setVisibility(View.GONE);
-        mLength.setVisibility(View.GONE);
         // the info TextView is not on the overlay
         mInfo = (TextView) findViewById(R.id.player_overlay_info);
 
@@ -275,28 +260,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     private int time = 0;
     private int mCurrentTime = 0;
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private int getScreenOrientation() {
-        switch (GetScreenRotation.getScreenRotation(mContext)) {
-            case Surface.ROTATION_0:
-                return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            case Surface.ROTATION_90:
-                return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-            case Surface.ROTATION_180:
-                // SCREEN_ORIENTATION_REVERSE_PORTRAIT only available since API
-                // Level 9+
-                return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO ? ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
-                        : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            case Surface.ROTATION_270:
-                // SCREEN_ORIENTATION_REVERSE_LANDSCAPE only available since API
-                // Level 9+
-                return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO ? ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
-                        : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            default:
-                return 0;
-        }
-    }
-
     //横屏竖屏切换，根据播放内容显示不同的控件
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -311,7 +274,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 mOverlayContent.setVisibility(View.GONE);
                 mOverlayHeader.setVisibility(View.VISIBLE);
                 img_play_channel.setVisibility(View.VISIBLE);
-                mLock.setVisibility(View.VISIBLE);
                 int sWidth = CommonApi.getScreenWidth(mContext);
                 int sHeight = CommonApi.getScreenHeight(mContext);
                 ViewGroup.LayoutParams mLayoutParams = this.getLayoutParams();
@@ -378,7 +340,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         mHandler.sendEmptyMessage(SHOW_PROGRESS);
         if (!mShowing) {
             mShowing = true;
-            mOverlayInterface.setVisibility(View.VISIBLE);
             dimStatusBar(false);
             switch (GetScreenRotation.getScreenRotation(mContext)) {
                 case Surface.ROTATION_0:
@@ -496,13 +457,10 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             if (!fromUser && !mIsLocked) {
                 mOverlayProgress.startAnimation(AnimationUtils.loadAnimation(
                         mContext, android.R.anim.fade_out));
-                mOverlayInterface.startAnimation(AnimationUtils.loadAnimation(
-                        mContext, android.R.anim.fade_out));
             }
             mLock.setVisibility(View.INVISIBLE);
             mOverlayHeader.setVisibility(View.INVISIBLE);
             mOverlayProgress.setVisibility(View.INVISIBLE);
-            mOverlayInterface.setVisibility(View.INVISIBLE);
             layout_seekbar.setVisibility(View.INVISIBLE);
             layout_vol_bright.setVisibility(View.GONE);
             layout_small_vol_bright.setVisibility(View.GONE);
@@ -518,7 +476,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             img_play_channel.setImageResource(R.drawable.live_drama);
         }
     }
-
 
     //所有彈窗消失
     public void setPopuWindowDismiss(){
@@ -549,26 +506,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             return;
     }
 
-    /**
-     * update the overlay播放器进度显示
-     */
-    private int setOverlayProgress() {
-        // Update all view elements
-        if (listener != null) {
-            time = listener.onCurrentPosition();
-            length = listener.onVideoLength();
-        }
-        mSeekbar.setMax(length);
-        mSeekbar.setProgress(time);
-        mSysTime.setText(DateFormat.getTimeFormat(mContext).format(
-                new Date(System.currentTimeMillis())));
-        mTime.setText(Util.millisToString(time));
-        mLength.setText(mDisplayRemainingTime && length > 0 ? "- "
-                + Util.millisToString(length - time) : Util
-                .millisToString(length));
-        return time;
-    }
-
     private boolean canShowProgress() {
         if(listener != null){
             return !mDragging && mShowing && listener.canShowProgress();
@@ -593,7 +530,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                     hideOverlay(false);
                     break;
                 case SHOW_PROGRESS:
-                    int pos = setOverlayProgress();
+                    int pos = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
                     if (canShowProgress()) {
                         msg = obtainMessage(SHOW_PROGRESS);
                         sendMessageDelayed(msg, 1000 - (pos % 1000));
@@ -683,12 +620,11 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
      */
     private void lockScreen() {
         if (mScreenOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
-            mContext.setRequestedOrientation(getScreenOrientation());
+            mContext.setRequestedOrientation(GetScreenRotation.getScreenOrientation(mContext));
         // showInfo(R.string.locked, 1000);
         mLock.setImageResource(R.drawable.live_lockx);
         mOverlayHeader.setVisibility(View.INVISIBLE);
         mOverlayProgress.setVisibility(View.INVISIBLE);
-        mOverlayInterface.setVisibility(View.INVISIBLE);
         layout_vol_bright.setVisibility(View.GONE);
         layout_small_vol_bright.setVisibility(View.GONE);
         setPopuWindowDismiss();
@@ -721,40 +657,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         mHandler.removeMessages(FADE_OUT_INFO);
         mHandler.sendEmptyMessageDelayed(FADE_OUT_INFO, duration);
     }
-
-
-    /**
-     * handle changes of the seekbar (volume)
-     */
-    private final SeekBar.OnSeekBarChangeListener mVolumeSeekListener = new SeekBar.OnSeekBarChangeListener() {
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress,
-                                      boolean fromUser) {
-            if (fromUser) {
-                int delta = (int) (progress * mAudioMax / seekBar.getMax());
-                int vol = (int) Math.min(Math.max(delta, 0), mAudioMax);
-                mAudioManager
-                        .setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
-                mIsAudioOrBrightnessChanged = true;
-                showInfo(
-                        mContext.getString(R.string.volume) + '\u00A0'
-                                + Integer.toString(vol), 1000);
-
-            }
-
-        }
-    };
 
     @Override
     public boolean onTrackballEvent(MotionEvent event) {
@@ -901,7 +803,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             if (listener != null) {
                 listener.onSeekTo(mCurrentTime + jump);
             }
-        setOverlayProgress();
+        time = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
         if (!mShowing) {
             showOverlay();
         } else {
@@ -1027,14 +929,16 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @Override
     public void onSeekTo(int position) {
         time = position;
-//        setOverlayProgress();
     }
 
     @Override
     public void setVideoLength(int length) {
         if(this.length == 0 && length > 0) {
+            this.length = length;
             mSeekbar.setMax(length);
-            setOverlayProgress();
+            time = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
+        } else if (length == 0){
+            this.length = length;
         }
     }
 
@@ -1075,7 +979,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         public void onProgressChanged(SeekBar seekBar, int  progress,
                                       boolean fromUser) {
             if (fromUser) {
-                setOverlayProgress();
+                time = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
                 mTime.setText(Util.millisToString(progress));
                 showInfo(Util.millisToString(progress));
                 if (listener != null) {
@@ -1124,32 +1028,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                     }
                     break;
                 case "mSizeListener":
-                    switch (GetScreenRotation.getScreenRotation(mContext)) {
-                        case Surface.ROTATION_0:
-                        case Surface.ROTATION_180:
-                            mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                            hideOverlay(true);
-                            Message msg = mHandler.obtainMessage(REQUESTED_SENSOR);
-                            mHandler.sendMessageDelayed(msg, 2000);
-                            mSize.setVisibility(View.GONE);
-                            player_overlay_play.setVisibility(View.GONE);
-                            setPopuWindowDismiss();
-                            img_play_channel.setVisibility(View.GONE);
-                            break;
-                        case Surface.ROTATION_90:
-                        case Surface.ROTATION_270:
-                            // SCREEN_ORIENTATION_REVERSE_LANDSCAPE only available since API
-                            // Level 9+
-                            mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                            hideOverlay(true);
-                            Message msg2 = mHandler.obtainMessage(REQUESTED_SENSOR);
-                            mHandler.sendMessageDelayed(msg2, 2000);
-                            mSize.setVisibility(View.VISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
-                            img_play_channel.setVisibility(View.VISIBLE);
-                            setPopuWindowDismiss();
-                            break;
-                    }
+                    mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    showOverlay();
                     break;
                 case "mFavorite":
                     if(listener != null)

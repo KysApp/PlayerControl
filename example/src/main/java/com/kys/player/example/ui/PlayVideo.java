@@ -75,6 +75,12 @@ public class PlayVideo extends Activity {
         }
     }
 
+    public void finished(){
+        mSurface.stopPlayback();
+        getApplicationContext().unbindService(serviceConnection);
+        super.onBackPressed();
+    }
+
     private final static String TAG = PlayVideo.class.getSimpleName();
     private IjkVideoView mSurface;
     private LinearLayout ll_summary;
@@ -808,7 +814,6 @@ public class PlayVideo extends Activity {
                             tv_desc.setLayoutParams(mLayoutParams);
                             isDescShow = true;
                         } else {
-//                        mLayoutParams.height = (int) getResources().getDimension(R.dimen.width_15);
                             tv_desc.setLayoutParams(mLayoutParams);
                             tv_desc.setMaxLines(2);
                             img_desc.setImageResource(R.drawable.live_open);
@@ -949,7 +954,6 @@ public class PlayVideo extends Activity {
         @Override
         public void onPrepared(IMediaPlayer mp) {
             // TODO Auto-generated method stub
-//            mPlayControl.setVideoLength(mSurface.getDuration());
             mProgressBar.setVisibility(View.GONE);
         }
     };
@@ -996,6 +1000,7 @@ public class PlayVideo extends Activity {
                 return;
             if (delta < 0)
                 delta = 0;
+            mSurface.seekTo(delta);
             mPlayControl.setState(mSurface.isPlaying());
             mPlayControl.onSeekTo(delta);
         }
@@ -1140,12 +1145,6 @@ public class PlayVideo extends Activity {
         }
 
     };
-
-    public void finished(){
-        mSurface.stopPlayback();
-        getApplicationContext().unbindService(serviceConnection);
-        super.onBackPressed();
-    }
 
     //DLNA设备获取监听
     public class DeviceListRegistryListener extends DefaultRegistryListener {

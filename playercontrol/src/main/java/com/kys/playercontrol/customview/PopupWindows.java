@@ -1,4 +1,4 @@
-package com.kys.playercontrol;
+package com.kys.playercontrol.customview;
 /**
  * Created by 幻云紫日 on 2016/9/26.
  */
@@ -15,6 +15,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.kys.playercontrol.R;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
 import com.kys.playercontrol.tools.CommonApi;
 

@@ -7,9 +7,6 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.provider.Settings;
 import android.view.WindowManager;
-import android.widget.SeekBar;
-
-import com.kys.playercontrol.R;
 
 /**
  * 作者：幻云紫日 on 2016/9/26 12:52

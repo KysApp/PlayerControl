@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:drawer="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/player_overlay_info"
@@ -15,53 +14,16 @@
         android:textSize="36sp"
         android:visibility="invisible" />
 
-    <RelativeLayout
-        android:id="@+id/player_overlay_buffer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/middle_margin"
-            android:src="@drawable/hint_volume_adjust"
-            android:visibility="gone" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="80dp"
-            android:src="@drawable/hint_progress_adjust"
-            android:visibility="gone" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
-            android:src="@drawable/hint_light_adjust"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/player_overlay_header"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/width_38"
         android:layout_alignParentTop="true"
-        android:layout_gravity="top"
         android:background="@color/transparent_gray"
         android:gravity="center_vertical"
         android:padding="@dimen/subtitle_padding"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/player_overlay_back"
@@ -124,52 +86,11 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/interface_overlay"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:background="@color/transparent_gray"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:visibility="invisible">
-
-        <LinearLayout
-            android:id="@+id/player_overlay_volume"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="5dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/volume" />
-
-            <SeekBar
-                android:id="@+id/volume_seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/player_overlay_length"
-                android:layout_toRightOf="@+id/player_overlay_time"
-                android:maxHeight="6dip"
-                android:minHeight="6dip"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:progressDrawable="@drawable/progress_horizontal"
-                android:thumb="@drawable/ic_seekbar_thumb" />
-        </LinearLayout>
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/progress_overlay"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/width_38"
-        android:layout_above="@+id/interface_overlay"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:background="@color/transparent_gray"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/width_15"
@@ -249,6 +170,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:gravity="right|center_vertical"
+                android:paddingRight="5dp"
                 android:text="0:00"
                 android:textColor="#ffffff"
                 android:textSize="12sp" />
@@ -307,15 +229,6 @@
             android:layout_height="0px"
             android:layout_gravity="right"/>
 
-        <!-- <ImageView 
-            android:id="@+id/img_play_model"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/player_control_padding"
-            android:button="@null"
-            android:visibility="gone"
-            android:background="@drawable/mode_up"/> -->
-
     </LinearLayout>
 
     <LinearLayout
@@ -323,7 +236,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:visibility="gone">
+        >
 
         <ImageView
             android:id="@+id/lock_overlay_button"
@@ -337,11 +250,11 @@
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleSmall"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:indeterminateDrawable="@drawable/my_progress_bar"
+        android:indeterminateDrawable="@drawable/progress_bar_loading"
         android:visibility="gone"/>
 
     <LinearLayout
