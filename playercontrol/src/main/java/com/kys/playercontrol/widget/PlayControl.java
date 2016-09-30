@@ -31,6 +31,7 @@ import com.kys.playercontrol.interfaces.OnPlayerControlListener;
 import com.kys.playercontrol.tools.BrightVolTouch;
 import com.kys.playercontrol.tools.CommonApi;
 import com.kys.playercontrol.tools.GetScreenRotation;
+import com.kys.playercontrol.tools.OverlayShow;
 import com.kys.playercontrol.tools.SeekProgress;
 
 import org.videolan.vlc.Util;
@@ -40,67 +41,78 @@ import org.videolan.vlc.WeakHandler;
  * Created by 幻云紫日 on 2016/9/1.
  */
 public class PlayControl extends RelativeLayout implements IPlayerControl{
-    private final static String TAG = "IJKPlayer";
-    private static int STATE_VOD_LIVE = 0;      //判断是否是直播、点播，0为点播，1为直播
-    private Activity mContext;
-    private int mUiVisibility = -1;
-    private int mScreenOrientation = 4;/* SCREEN_ORIENTATION_SENSOR */
+    public final static String TAG = "IJKPlayer";
+    public static int STATE_VOD_LIVE = 0;      //判断是否是直播、点播，0为点播，1为直播
+    public static Activity mContext;
+    public int mUiVisibility = -1;
+    public static int mScreenOrientation = 4;/* SCREEN_ORIENTATION_SENSOR */
     /**
      * Overlay
      */
     public View mProgressBar, share_progressBar;
-    private View mOverlayHeader;
-    private View mOverlayProgress;
-    private View mOverlayContent;
-    private View mOverlayPlayer;
-    private SeekBar mSeekbar;
-    private TextView mTitle;
-    private TextView mSysTime;
-    private ImageView btn_back;
-    public TextView mTime;
-    private TextView mLength;
-    private TextView mInfo;
-    private boolean mEnableBrightnessGesture;
-    private boolean mDisplayRemainingTime = false;
-    private static final int OVERLAY_TIMEOUT = 4000;
-    private static final int OVERLAY_INFINITE = 3600000;
-    private static final int FADE_OUT = 1;
-    private static final int SHOW_PROGRESS = 2;
-    private static final int SURFACE_SIZE = 3;
-    private static final int FADE_OUT_INFO = 4;
-    private static final int REQUESTED_SENSOR = 5;
-    private static final int LOCK_SHOW = 7;
-    private boolean mDragging;
-    private boolean mShowing;
-    private boolean mIsLocked = false;
-    private ImageView mLock;
-    private ImageView mSize;
-    private AudioManager mAudioManager;
-    private int mAudioMax;
-    private boolean mIsAudioOrBrightnessChanged;
-    private int mSurfaceYDisplayRange;
-    private float mTouchY, mTouchX, mVol;
-    private boolean mIsFirstBrightnessGesture = true;
+    public static View mOverlayHeader;
+    public static View mOverlayProgress;
+    public View mOverlayContent;
+    public View mOverlayPlayer;
+    public static SeekBar mSeekbar;
+    public TextView mTitle;
+    public static TextView mSysTime;
+    public ImageView btn_back;
+    public static TextView mTime;
+    public static TextView mLength;
+    public static TextView mInfo;
+    public boolean mEnableBrightnessGesture;
+    public static boolean mDisplayRemainingTime = false;
+    public static final int OVERLAY_TIMEOUT = 4000;
+    public static final int OVERLAY_INFINITE = 3600000;
+    public static final int FADE_OUT = 1;
+    public static final int SHOW_PROGRESS = 2;
+    public static final int SURFACE_SIZE = 3;
+    public static final int FADE_OUT_INFO = 4;
+    public static final int REQUESTED_SENSOR = 5;
+    public static final int LOCK_SHOW = 7;
+    public static boolean mDragging;
+    public static boolean mShowing;
+    public static boolean mIsLocked = false;
+    public static ImageView mLock;
+    public ImageView mSize;
+    public AudioManager mAudioManager;
+    public int mAudioMax;
+    public boolean mIsAudioOrBrightnessChanged;
+    public int mSurfaceYDisplayRange;
+    public float mTouchY, mTouchX, mVol;
+    public boolean mIsFirstBrightnessGesture = true;
     int screenWidth;
-    public ImageView img_play_channel, img_play_dlna, img_play_favorite, img_play_share;
-    private boolean isChannelShow = false;
-    private boolean isShareShow = false;
-    private boolean isDefinShow = false;
-    PopupWindow popupChannelInfo, popupTvInfo, popupShareTv, popuDefinition;
-    private ImageView player_overlay_play;
-    private LinearLayout layout_bookmark;
-    private TextView txt_last_time, txt_last_play_time;
-    private RelativeLayout layout_vol_bright, layout_small_vol_bright;
-    private ImageView img_brigth, img_volume;
+    public static ImageView img_play_channel;
+    public ImageView img_play_dlna;
+    public ImageView img_play_favorite;
+    public ImageView img_play_share;
+    public static boolean isChannelShow = false;
+    public static boolean isShareShow = false;
+    public static boolean isDefinShow = false;
+    static PopupWindow popupChannelInfo;
+    static PopupWindow popupTvInfo;
+    static PopupWindow popupShareTv;
+    static PopupWindow popuDefinition;
+    public static ImageView player_overlay_play;
+    public LinearLayout layout_bookmark;
+    public TextView txt_last_time, txt_last_play_time;
+    public static RelativeLayout layout_vol_bright;
+    public static RelativeLayout layout_small_vol_bright;
+    public ImageView img_brigth, img_volume;
     public ImageView img_play_defi;
-    private boolean isFullOrSmall;
-    private LinearLayout layout_seekbar;
-    private boolean mEnableWheelbar;
-    private ImageView img_bookmark_cancel;
-    public boolean isLive = true;
-    public OnPlayerControlListener listener = null;
-    private int length = 0;
-    private boolean isPlaying;
+    public boolean isFullOrSmall;
+    public static LinearLayout layout_seekbar;
+    public boolean mEnableWheelbar;
+    public ImageView img_bookmark_cancel;
+    public static boolean isLive = true;
+    public static OnPlayerControlListener listener = null;
+    public static int length = 0;
+    public boolean isPlaying;
+
+    public PlayControl(Activity context) {
+        super(context);
+    }
 
     public PlayControl(Activity context, View view1, View view2, int come) {
         super(context);
@@ -133,7 +145,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     //播放控制层初始化
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void initPlayer() {
+    public void initPlayer() {
         // TODO Auto-generated method stub
         mContext.setRequestedOrientation(mScreenOrientation != 100 ? mScreenOrientation
                 : GetScreenRotation.getScreenOrientation(mContext));
@@ -172,43 +184,43 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         mTitle.setGravity(Gravity.CENTER);
         mSysTime = (TextView) findViewById(R.id.player_overlay_systime);
         btn_back = (ImageView) findViewById(R.id.player_overlay_back);
-        btn_back.setOnClickListener(new OnClickListioners("mExitFullScreenListener"));
+        btn_back.setOnClickListener(new OnClickListioners(mContext, "mExitFullScreenListener"));
         // mOverlayHeader.setVisibility(View.GONE);
 
         // Position and remaining time
         mTime = (TextView) findViewById(R.id.player_overlay_time);
-        mTime.setOnClickListener(new OnClickListioners("mRemainingTimeListener"));
+        mTime.setOnClickListener(new OnClickListioners(mContext, "mRemainingTimeListener"));
         mLength = (TextView) findViewById(R.id.player_overlay_length);
-        mLength.setOnClickListener(new OnClickListioners("mRemainingTimeListener"));
+        mLength.setOnClickListener(new OnClickListioners(mContext, "mRemainingTimeListener"));
         // the info TextView is not on the overlay
         mInfo = (TextView) findViewById(R.id.player_overlay_info);
 
         mEnableBrightnessGesture = true;
         player_overlay_play = (ImageView) findViewById(R.id.player_overlay_play);
-        player_overlay_play.setOnClickListener(new OnClickListioners("mPlayPause"));
+        player_overlay_play.setOnClickListener(new OnClickListioners(mContext, "mPlayPause"));
         mLock = (ImageView) findViewById(R.id.lock_overlay_button);
-        mLock.setOnClickListener(new OnClickListioners("mLockListener"));
+        mLock.setOnClickListener(new OnClickListioners(mContext, "mLockListener"));
 
         mSize = (ImageView) findViewById(R.id.player_overlay_size);
-        mSize.setOnClickListener(new OnClickListioners("mSizeListener"));
+        mSize.setOnClickListener(new OnClickListioners(mContext, "mSizeListener"));
         img_play_favorite = (ImageView) findViewById(R.id.img_play_favorite);
         img_play_share = (ImageView) findViewById(R.id.img_play_share);
-        img_play_share.setOnClickListener(new OnClickListioners("mPlayShare"));
+        img_play_share.setOnClickListener(new OnClickListioners(mContext, "mPlayShare"));
         img_play_channel = (ImageView) findViewById(R.id.img_play_channel);
         //img_play_channel显示选集状态，点击弹出选集弹窗
         if ((STATE_VOD_LIVE == 0)) {
-            img_play_favorite.setOnClickListener(new OnClickListioners("mFavorite"));
+            img_play_favorite.setOnClickListener(new OnClickListioners(mContext, "mFavorite"));
             img_play_channel.setImageResource(R.drawable.live_drama);
         }
         //直播时隐藏收藏按钮，img_play_channel显示选择频道状态，点击弹出频道弹窗
         if ((STATE_VOD_LIVE == 1)) {
             img_play_favorite.setVisibility(View.GONE);
         }
-        img_play_channel.setOnClickListener(new OnClickListioners("mPlayChannel"));
+        img_play_channel.setOnClickListener(new OnClickListioners(mContext, "mPlayChannel"));
 
         layout_seekbar = (LinearLayout) findViewById(R.id.layout_seekbar);
         mSeekbar = (SeekBar) findViewById(R.id.player_overlay_seekbar);
-        mSeekbar.setOnSeekBarChangeListener(mSeekListener);
+        mSeekbar.setOnSeekBarChangeListener(SeekProgress.mSeekListener);
 
         mAudioManager = (AudioManager) mContext.getSystemService(mContext.AUDIO_SERVICE);
         mAudioMax = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -225,47 +237,47 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         img_brigth = (ImageView) findViewById(R.id.img_brigth);
         img_volume = (ImageView) findViewById(R.id.img_volume);
         img_play_defi = (ImageView) findViewById(R.id.img_play_defi);
-        img_play_defi.setOnClickListener(new OnClickListioners("mPlayDefinition"));
+        img_play_defi.setOnClickListener(new OnClickListioners(mContext, "mPlayDefinition"));
         img_play_dlna = (ImageView) findViewById(R.id.img_play_dlna);
-        img_play_dlna.setOnClickListener(new OnClickListioners("mDlanShare"));
+        img_play_dlna.setOnClickListener(new OnClickListioners(mContext, "mDlanShare"));
     }
 
     //DLNA设备展现
-    private void intPopupShareTv() {
+    public void intPopupShareTv() {
         // TODO Auto-generated method stub
         popupShareTv = new PopupWindow(mContext);
         PopupWindows.intPopupShareTv(mContext, popupShareTv, listener);
     }
 
     //频道弹窗
-    private void intPopupChannelInfo() {
+    public void intPopupChannelInfo() {
         // TODO Auto-generated method stub
         popupChannelInfo = new PopupWindow(mContext);
         PopupWindows.intPopupChannelInfo(mContext, popupChannelInfo, mContext.findViewById(R.id.img_play_channel), listener);
     }
 
     //全屏选集弹窗
-    private void intPopupTvInfo() {
+    public void intPopupTvInfo() {
         // TODO Auto-generated method stub
         popupTvInfo = new PopupWindow(mContext);
         PopupWindows.intPopupTvInfo(mContext, popupTvInfo, mContext.findViewById(R.id.id_location), listener);
     }
 
     //清晰度切换
-    private void intDefinition() {
+    public void intDefinition() {
         popuDefinition = new PopupWindow(mContext);
         PopupWindows.intDefinition(mContext, popuDefinition, mContext.findViewById(R.id.id_defi), listener);
     }
 
-    private int time = 0;
-    private int mCurrentTime = 0;
+    public static int time = 0;
+    public int mCurrentTime = 0;
 
     //横屏竖屏切换，根据播放内容显示不同的控件
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         // TODO Auto-generated method stub
         super.onConfigurationChanged(newConfig);
-        hideOverlay(true);
+        OverlayShow.hideOverlay(true);
         if (newConfig != null) {
             if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && !isFullOrSmall) {
                 mContext.getWindow()
@@ -329,156 +341,16 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     /**
      * show overlay the the default timeout
      */
-    public void showOverlay() {
-        showOverlay(OVERLAY_TIMEOUT);
+    public static void showOverlay() {
+        OverlayShow.showOverlay(OVERLAY_TIMEOUT);
     }
 
-    /**
-     * show overlay
-     */
-    private void showOverlay(int timeout) {
-        mHandler.sendEmptyMessage(SHOW_PROGRESS);
-        if (!mShowing) {
-            mShowing = true;
-            dimStatusBar(false);
-            switch (GetScreenRotation.getScreenRotation(mContext)) {
-                case Surface.ROTATION_0:
-                    mLock.setVisibility(View.GONE);
-                    mOverlayHeader.setVisibility(View.VISIBLE);
-                    mOverlayProgress.setVisibility(View.VISIBLE);
-                    if(STATE_VOD_LIVE == 1) {
-                        if (isLive) {
-                            layout_seekbar.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.INVISIBLE);
-                        } else {
-                            layout_seekbar.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    if(STATE_VOD_LIVE == 0) {
-                        img_play_channel.setVisibility(View.GONE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
-                        layout_seekbar.setVisibility(View.INVISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case Surface.ROTATION_180:
-                    mLock.setVisibility(View.GONE);
-                    mOverlayHeader.setVisibility(View.VISIBLE);
-                    mOverlayProgress.setVisibility(View.VISIBLE);
-                    if(STATE_VOD_LIVE == 1) {
-                        if (isLive) {
-                            layout_seekbar.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.INVISIBLE);
-                        } else {
-                            layout_seekbar.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    if(STATE_VOD_LIVE == 0) {
-                        img_play_channel.setVisibility(View.GONE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
-                        layout_seekbar.setVisibility(View.INVISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case Surface.ROTATION_90:
-                    if (mIsLocked) {
-                        img_play_channel.setVisibility(View.VISIBLE);
-                        layout_seekbar.setVisibility(View.VISIBLE);
-                        mOverlayHeader.setVisibility(View.VISIBLE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
-                    } else {
-                        img_play_channel.setVisibility(View.VISIBLE);
-                        mOverlayHeader.setVisibility(View.VISIBLE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
-                        if(STATE_VOD_LIVE == 1) {
-                            if (isLive) {
-                                layout_seekbar.setVisibility(View.INVISIBLE);
-                                player_overlay_play.setVisibility(View.INVISIBLE);
-                            } else {
-                                layout_seekbar.setVisibility(View.VISIBLE);
-                                player_overlay_play.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        if(STATE_VOD_LIVE == 0) {
-                            layout_seekbar.setVisibility(View.VISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    mLock.setVisibility(View.VISIBLE);
-                    break;
-                case Surface.ROTATION_270:
-                    if (mIsLocked) {
-                        img_play_channel.setVisibility(View.VISIBLE);
-                        layout_seekbar.setVisibility(View.VISIBLE);
-                        mOverlayHeader.setVisibility(View.VISIBLE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
-                    } else {
-                        img_play_channel.setVisibility(View.VISIBLE);
-                        mOverlayHeader.setVisibility(View.VISIBLE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
-                        if(STATE_VOD_LIVE == 1) {
-                            if (isLive) {
-                                layout_seekbar.setVisibility(View.INVISIBLE);
-                                player_overlay_play.setVisibility(View.INVISIBLE);
-                            } else {
-                                layout_seekbar.setVisibility(View.VISIBLE);
-                                player_overlay_play.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        if(STATE_VOD_LIVE == 0) {
-                            layout_seekbar.setVisibility(View.VISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    mLock.setVisibility(View.VISIBLE);
-                    break;
-
-            }
-
-        }
-        Message msg = mHandler.obtainMessage(FADE_OUT);
-        if (timeout != 0) {
-            mHandler.removeMessages(FADE_OUT);
-            mHandler.sendMessageDelayed(msg, timeout);
-        }
-    }
-
-    /**
-     * hider overlay
-     */
-    public void hideOverlay(boolean fromUser) {
-
-        if (mShowing) {
-            mHandler.removeMessages(SHOW_PROGRESS);
-            if (!fromUser && !mIsLocked) {
-                mOverlayProgress.startAnimation(AnimationUtils.loadAnimation(
-                        mContext, android.R.anim.fade_out));
-            }
-            mLock.setVisibility(View.INVISIBLE);
-            mOverlayHeader.setVisibility(View.INVISIBLE);
-            mOverlayProgress.setVisibility(View.INVISIBLE);
-            layout_seekbar.setVisibility(View.INVISIBLE);
-            layout_vol_bright.setVisibility(View.GONE);
-            layout_small_vol_bright.setVisibility(View.GONE);
-            mShowing = false;
-            dimStatusBar(false);
-        }
-        setPopuWindowDismiss();
-        isChannelShow = false;
-        if ((STATE_VOD_LIVE == 1)){
-            img_play_channel.setImageResource(R.drawable.live_channel_select);
-        }
-        if ((STATE_VOD_LIVE == 0)){
-            img_play_channel.setImageResource(R.drawable.live_drama);
-        }
+    public static void hideOverlay(boolean b){
+        OverlayShow.hideOverlay(b);
     }
 
     //所有彈窗消失
-    public void setPopuWindowDismiss(){
+    public static void setPopuWindowDismiss(){
         if (popupTvInfo != null) {
             popupTvInfo.dismiss();
         }
@@ -501,36 +373,36 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
      * Hide it on Android 4.0 and later
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private void dimStatusBar(boolean dim) {
+    public static void dimStatusBar(boolean dim) {
         if (!org.videolan.vlc.Util.isHoneycombOrLater() || !Util.hasNavBar())
             return;
     }
 
-    private boolean canShowProgress() {
+    public static boolean canShowProgress() {
         if(listener != null){
             return !mDragging && mShowing && listener.canShowProgress();
         }
         return false;
     }
 
-    private void fadeOutInfo() {
+    public static void fadeOutInfo() {
         if (mInfo.getVisibility() == View.VISIBLE)
             mInfo.startAnimation(AnimationUtils.loadAnimation(mContext,
                     android.R.anim.fade_out));
         mInfo.setVisibility(View.INVISIBLE);
     }
 
-    private WeakHandler mHandler = new WeakHandler(mContext) {
+    public static WeakHandler mHandler = new WeakHandler(mContext) {
 
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             switch (msg.what) {
                 case FADE_OUT:
-                    hideOverlay(false);
+                    OverlayShow.hideOverlay(false);
                     break;
                 case SHOW_PROGRESS:
-                    int pos = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
+                    int pos = SeekProgress.setOverlayProgress();
                     if (canShowProgress()) {
                         msg = obtainMessage(SHOW_PROGRESS);
                         sendMessageDelayed(msg, 1000 - (pos % 1000));
@@ -566,7 +438,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                     // SCREEN_ORIENTATION_REVERSE_LANDSCAPE only available since API
                     // Level 9+
                     mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    hideOverlay(true);
+                    OverlayShow.hideOverlay(true);
                     Message msg = mHandler.obtainMessage(REQUESTED_SENSOR);
                     mHandler.sendMessageDelayed(msg, 2000);
                     return;
@@ -593,7 +465,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
      *
      * @param text
      */
-    private void showInfo(String text) {
+    public static void showInfo(String text) {
         mInfo.setVisibility(View.VISIBLE);
         mInfo.setText(text);
         mHandler.removeMessages(FADE_OUT_INFO);
@@ -604,21 +476,21 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
      *
      * @param delay
      */
-    private void hideInfo(int delay) {
+    public static void hideInfo(int delay) {
         mHandler.sendEmptyMessageDelayed(FADE_OUT_INFO, delay);
     }
 
     /**
      * hide the info view
      */
-    private void hideInfo() {
+    public static void hideInfo() {
         hideInfo(0);
     }
 
     /**
      * Lock screen rotation
      */
-    private void lockScreen() {
+    public void lockScreen() {
         if (mScreenOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
             mContext.setRequestedOrientation(GetScreenRotation.getScreenOrientation(mContext));
         // showInfo(R.string.locked, 1000);
@@ -636,7 +508,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     /**
      * Remove screen lock
      */
-    private void unlockScreen() {
+    public static void unlockScreen() {
         if (mScreenOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
             mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         // showInfo(R.string.unlocked, 1000);
@@ -746,7 +618,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                     if (!mShowing) {
                         showOverlay();
                     } else {
-                        hideOverlay(true);
+                        OverlayShow.hideOverlay(true);
                     }
                 }
                 if (!isLive || STATE_VOD_LIVE == 0) {
@@ -803,11 +675,11 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             if (listener != null) {
                 listener.onSeekTo(mCurrentTime + jump);
             }
-        time = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
+        time = SeekProgress.setOverlayProgress();
         if (!mShowing) {
             showOverlay();
         } else {
-            hideOverlay(true);
+            OverlayShow.hideOverlay(true);
         }
     }
 
@@ -890,8 +762,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         txt_last_time.setText(getResources().getString(R.string.txt_last_play_time)
                 + Util.millisToString(position)
                 + "，点击");
-        txt_last_play_time.setOnClickListener(new OnClickListioners("mTurnBookMark", position));
-        img_bookmark_cancel.setOnClickListener(new OnClickListioners("mBookMarkCancel"));
+        txt_last_play_time.setOnClickListener(new OnClickListioners(mContext, "mTurnBookMark", position));
+        img_bookmark_cancel.setOnClickListener(new OnClickListioners(mContext, "mBookMarkCancel"));
     }
 
     @Override
@@ -936,7 +808,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         if(this.length == 0 && length > 0) {
             this.length = length;
             mSeekbar.setMax(length);
-            time = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
+            time = SeekProgress.setOverlayProgress();
         } else if (length == 0){
             this.length = length;
         }
@@ -956,158 +828,4 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         isLive = live;
     }
 
-    /**
-     * 播放器进度条监听
-     */
-    private final SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            mDragging = true;
-            showOverlay(OVERLAY_INFINITE);
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            mDragging = false;
-            showOverlay();
-            hideInfo();
-            hideOverlay(true);
-        }
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int  progress,
-                                      boolean fromUser) {
-            if (fromUser) {
-                time = SeekProgress.setOverlayProgress(mContext, mSeekbar, mTime, mLength, listener, mSysTime, time, length, mDisplayRemainingTime);
-                mTime.setText(Util.millisToString(progress));
-                showInfo(Util.millisToString(progress));
-                if (listener != null) {
-                    listener.onSeekTo(progress);
-                }
-            }
-
-        }
-    };
-
-    class OnClickListioners implements View.OnClickListener{
-
-        String id = "";
-        int position = 0;
-
-        public OnClickListioners(String id){
-            this.id = id;
-        }
-
-        public OnClickListioners(String id, int position) {
-            this.id = id;
-            this.position = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (id){
-                case "mExitFullScreenListener":
-                    onBackPressed();
-                    break;
-                case "mRemainingTimeListener":
-                    mDisplayRemainingTime = !mDisplayRemainingTime;
-                    showOverlay();
-                    break;
-                case "mPlayPause":
-                    if (listener != null)
-                        listener.onPlayPause();
-                    break;
-                case "mLockListener":
-                    if (mIsLocked) {
-                        mIsLocked = false;
-                        unlockScreen();
-                    } else {
-                        mIsLocked = true;
-                        lockScreen();
-                    }
-                    break;
-                case "mSizeListener":
-                    mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                    showOverlay();
-                    break;
-                case "mFavorite":
-                    if(listener != null)
-                        listener.getFavorite();
-                    break;
-                case "mPlayChannel":
-                    if ((STATE_VOD_LIVE == 0)) {
-                        if (isChannelShow) {
-                            if (popupTvInfo != null) {
-                                popupTvInfo.dismiss();
-                            }
-                            isChannelShow = false;
-                        } else {
-                            intPopupTvInfo();
-                            isChannelShow = true;
-                        }
-                        showOverlay();
-                    } else if ((STATE_VOD_LIVE == 1)) {        //直播时隐藏收藏按钮，img_play_channel显示选择频道状态，点击弹出频道弹窗
-                        if (isChannelShow) {
-                            if (popupChannelInfo != null) {
-                                popupChannelInfo.dismiss();
-                            }
-                            img_play_channel
-                                    .setImageResource(R.drawable.live_channel_select);
-                            isChannelShow = false;
-                        } else {
-                            intPopupChannelInfo();
-                            img_play_channel
-                                    .setImageResource(R.drawable.live_channel_select);
-                            isChannelShow = true;
-                        }
-                        showOverlay();
-                    }
-                    break;
-                case "mPlayDefinition":
-                    if (isDefinShow) {
-                        if (popuDefinition != null) {
-                            popuDefinition.dismiss();
-                        }
-                        isDefinShow = false;
-                    } else {
-                        intDefinition();
-                        isDefinShow = true;
-                    }
-                    showOverlay();
-                    break;
-                case "mDlanShare":
-                    if (isShareShow) {
-                        if (popupShareTv != null) {
-                            popupShareTv.dismiss();
-                        }
-                        isShareShow = false;
-                    } else {
-                        intPopupShareTv();
-                        isShareShow = true;
-                    }
-                    showOverlay();
-                    break;
-                case "mDlanRefresh":
-                    setDlnaRefresh(true);
-                    if(listener != null)
-                        listener.onRefreshDlna();
-                    break;
-                case "mTurnBookMark":
-                    mSeekbar.setProgress(position);
-                    layout_bookmark.setVisibility(View.INVISIBLE);
-                    break;
-                case "mBookMarkCancel":
-                    layout_bookmark.setVisibility(View.INVISIBLE);
-                    break;
-                case "mPlayShare":
-                    if(listener != null)
-                        listener.onShare();
-                    break;
-                default:
-                    break;
-
-            }
-        }
-    }
 }

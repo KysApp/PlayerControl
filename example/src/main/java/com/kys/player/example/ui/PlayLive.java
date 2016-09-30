@@ -32,6 +32,7 @@ import com.kys.player.example.entity.EPG;
 import com.kys.player.example.entity.Lives;
 import com.kys.player.example.tools.HttpJsonObjectHelper;
 import com.kys.player.example.tools.Json2EntityHelper;
+import com.kys.playercontrol.entity.Rescourse;
 import com.kys.playercontrol.widget.PlayControl;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
 

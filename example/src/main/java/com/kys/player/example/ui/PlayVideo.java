@@ -37,6 +37,7 @@ import com.kys.player.example.customview.NoScrollGridView;
 import com.kys.player.example.entity.Video;
 import com.kys.player.example.tools.HttpJsonObjectHelper;
 import com.kys.player.example.tools.Json2EntityHelper2;
+import com.kys.playercontrol.entity.Rescourse;
 import com.kys.playercontrol.widget.PlayControl;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
 import com.zxt.dlna.activity.SettingActivity;

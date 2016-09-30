@@ -6,14 +6,17 @@ package com.kys.playercontrol.tools;
 import android.app.Activity;
 import android.text.format.DateFormat;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-import com.kys.playercontrol.interfaces.OnPlayerControlListener;
+import com.kys.playercontrol.widget.PlayControl;
 
 import org.videolan.vlc.Util;
 
 import java.util.Date;
-public class SeekProgress {
+public class SeekProgress extends PlayControl{
+
+    public SeekProgress(Activity context) {
+        super(context);
+    }
 
     /**
      * update the overlay播放器进度显示
@@ -27,7 +30,7 @@ public class SeekProgress {
      * @param length
      * @param mDisplayRemainingTime
      */
-    public static int setOverlayProgress(Activity mContext, SeekBar mSeekbar, TextView mTime, TextView mLength, OnPlayerControlListener listener, TextView mSysTime, int time, int length, boolean mDisplayRemainingTime) {
+    public static int setOverlayProgress() {
         // Update all view elements
         if (listener != null) {
             time = listener.onCurrentPosition();
@@ -43,4 +46,38 @@ public class SeekProgress {
                 .millisToString(length));
         return time;
     }
+
+    /**
+     * 播放器进度条监听
+     */
+    public static final SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            mDragging = true;
+            OverlayShow.showOverlay(OVERLAY_INFINITE);
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            mDragging = false;
+            showOverlay();
+            hideInfo();
+            OverlayShow.hideOverlay(true);
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int  progress,
+                                      boolean fromUser) {
+            if (fromUser) {
+                time = SeekProgress.setOverlayProgress();
+                mTime.setText(Util.millisToString(progress));
+                showInfo(Util.millisToString(progress));
+                if (listener != null) {
+                    listener.onSeekTo(progress);
+                }
+            }
+
+        }
+    };
 }

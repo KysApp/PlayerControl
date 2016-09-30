@@ -17,12 +17,12 @@
             android:layout_height="wrap_content"
             ></tv.danmaku.ijk.media.sample.widget.media.IjkVideoView>
 
-        <FrameLayout
+        <com.kys.playercontrol.widget.PlayControl
             android:id="@+id/frame_control"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-        </FrameLayout>
+        </com.kys.playercontrol.widget.PlayControl>
     </RelativeLayout>
 
     <!--<FrameLayout
