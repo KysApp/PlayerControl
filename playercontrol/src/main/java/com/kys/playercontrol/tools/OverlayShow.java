@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 
 import com.kys.playercontrol.R;
+import com.kys.playercontrol.widget.KeyShow;
 import com.kys.playercontrol.widget.PlayControl;
+import com.kys.playercontrol.widget.Rescourse;
 
 /**
  * 作者：幻云紫日 on 2016/9/29 13:39
@@ -39,14 +41,14 @@ public class OverlayShow extends PlayControl{
                             player_overlay_play.setVisibility(View.INVISIBLE);
                         } else {
                             layout_seekbar.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
+                            if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                         }
                     }
                     if(STATE_VOD_LIVE == 0) {
                         img_play_channel.setVisibility(View.GONE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
+                        if(KeyShow.isProgressBar_show())mOverlayProgress.setVisibility(View.VISIBLE);
                         layout_seekbar.setVisibility(View.INVISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
+                        if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                     }
                     break;
                 case Surface.ROTATION_180:
@@ -59,25 +61,25 @@ public class OverlayShow extends PlayControl{
                             player_overlay_play.setVisibility(View.INVISIBLE);
                         } else {
                             layout_seekbar.setVisibility(View.INVISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
+                            if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                         }
                     }
                     if(STATE_VOD_LIVE == 0) {
                         img_play_channel.setVisibility(View.GONE);
-                        mOverlayProgress.setVisibility(View.VISIBLE);
+                        if(KeyShow.isProgressBar_show())mOverlayProgress.setVisibility(View.VISIBLE);
                         layout_seekbar.setVisibility(View.INVISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
+                        if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                     }
                     break;
                 case Surface.ROTATION_90:
                     if (mIsLocked) {
-                        img_play_channel.setVisibility(View.VISIBLE);
-                        layout_seekbar.setVisibility(View.VISIBLE);
+                        if(KeyShow.isImg_play_channel_show())img_play_channel.setVisibility(View.VISIBLE);
+                        if(KeyShow.isPlayer_overlay_seekbar_show())layout_seekbar.setVisibility(View.VISIBLE);
                         mOverlayHeader.setVisibility(View.VISIBLE);
                         mOverlayProgress.setVisibility(View.VISIBLE);
-                        player_overlay_play.setVisibility(View.VISIBLE);
+                        if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                     } else {
-                        img_play_channel.setVisibility(View.VISIBLE);
+                        if(KeyShow.isImg_play_channel_show())img_play_channel.setVisibility(View.VISIBLE);
                         mOverlayHeader.setVisibility(View.VISIBLE);
                         mOverlayProgress.setVisibility(View.VISIBLE);
                         if(STATE_VOD_LIVE == 1) {
@@ -85,26 +87,26 @@ public class OverlayShow extends PlayControl{
                                 layout_seekbar.setVisibility(View.INVISIBLE);
                                 player_overlay_play.setVisibility(View.INVISIBLE);
                             } else {
-                                layout_seekbar.setVisibility(View.VISIBLE);
-                                player_overlay_play.setVisibility(View.VISIBLE);
+                                if(KeyShow.isPlayer_overlay_seekbar_show())layout_seekbar.setVisibility(View.VISIBLE);
+                                if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                             }
                         }
                         if(STATE_VOD_LIVE == 0) {
-                            layout_seekbar.setVisibility(View.VISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
+                            if(KeyShow.isPlayer_overlay_seekbar_show())layout_seekbar.setVisibility(View.VISIBLE);
+                            if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                         }
                     }
-                    mLock.setVisibility(View.VISIBLE);
+                    if(KeyShow.isLock_overlay_button_show())mLock.setVisibility(View.VISIBLE);
                     break;
                 case Surface.ROTATION_270:
                     if (mIsLocked) {
-                        img_play_channel.setVisibility(View.VISIBLE);
-                        layout_seekbar.setVisibility(View.VISIBLE);
+                        if(KeyShow.isImg_play_channel_show())img_play_channel.setVisibility(View.VISIBLE);
+                        if(KeyShow.isPlayer_overlay_seekbar_show())layout_seekbar.setVisibility(View.VISIBLE);
                         mOverlayHeader.setVisibility(View.VISIBLE);
                         mOverlayProgress.setVisibility(View.VISIBLE);
                         player_overlay_play.setVisibility(View.VISIBLE);
                     } else {
-                        img_play_channel.setVisibility(View.VISIBLE);
+                        if(KeyShow.isImg_play_channel_show())img_play_channel.setVisibility(View.VISIBLE);
                         mOverlayHeader.setVisibility(View.VISIBLE);
                         mOverlayProgress.setVisibility(View.VISIBLE);
                         if(STATE_VOD_LIVE == 1) {
@@ -112,16 +114,16 @@ public class OverlayShow extends PlayControl{
                                 layout_seekbar.setVisibility(View.INVISIBLE);
                                 player_overlay_play.setVisibility(View.INVISIBLE);
                             } else {
-                                layout_seekbar.setVisibility(View.VISIBLE);
-                                player_overlay_play.setVisibility(View.VISIBLE);
+                                if(KeyShow.isPlayer_overlay_seekbar_show())layout_seekbar.setVisibility(View.VISIBLE);
+                                if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                             }
                         }
                         if(STATE_VOD_LIVE == 0) {
-                            layout_seekbar.setVisibility(View.VISIBLE);
-                            player_overlay_play.setVisibility(View.VISIBLE);
+                            if(KeyShow.isPlayer_overlay_seekbar_show())layout_seekbar.setVisibility(View.VISIBLE);
+                            if(KeyShow.isPlayer_overlay_play_show())player_overlay_play.setVisibility(View.VISIBLE);
                         }
                     }
-                    mLock.setVisibility(View.VISIBLE);
+                    if(KeyShow.isLock_overlay_button_show()) mLock.setVisibility(View.VISIBLE);
                     break;
 
             }
@@ -156,11 +158,6 @@ public class OverlayShow extends PlayControl{
         }
         setPopuWindowDismiss();
         isChannelShow = false;
-        if ((STATE_VOD_LIVE == 1)){
-            img_play_channel.setImageResource(R.drawable.live_channel_select);
-        }
-        if ((STATE_VOD_LIVE == 0)){
-            img_play_channel.setImageResource(R.drawable.live_drama);
-        }
+        img_play_channel.setImageResource(Rescourse.getImg_play_channel_bg());
     }
 }

@@ -49,15 +49,16 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     /**
      * Overlay
      */
-    public View mProgressBar, share_progressBar;
+    public static View mProgressBar;
+    public static View share_progressBar;
     public static View mOverlayHeader;
     public static View mOverlayProgress;
-    public View mOverlayContent;
-    public View mOverlayPlayer;
+    public static View mOverlayContent;
+    public static View mOverlayPlayer;
     public static SeekBar mSeekbar;
-    public TextView mTitle;
+    public static TextView mTitle;
     public static TextView mSysTime;
-    public ImageView btn_back;
+    public static ImageView btn_back;
     public static TextView mTime;
     public static TextView mLength;
     public static TextView mInfo;
@@ -75,7 +76,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public static boolean mShowing;
     public static boolean mIsLocked = false;
     public static ImageView mLock;
-    public ImageView mSize;
+    public static ImageView mSize;
     public AudioManager mAudioManager;
     public int mAudioMax;
     public boolean mIsAudioOrBrightnessChanged;
@@ -84,9 +85,9 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public boolean mIsFirstBrightnessGesture = true;
     int screenWidth;
     public static ImageView img_play_channel;
-    public ImageView img_play_dlna;
-    public ImageView img_play_favorite;
-    public ImageView img_play_share;
+    public static ImageView img_play_dlna;
+    public static ImageView img_play_favorite;
+    public static ImageView img_play_share;
     public static boolean isChannelShow = false;
     public static boolean isShareShow = false;
     public static boolean isDefinShow = false;
@@ -95,16 +96,16 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     static PopupWindow popupShareTv;
     static PopupWindow popuDefinition;
     public static ImageView player_overlay_play;
-    public LinearLayout layout_bookmark;
-    public TextView txt_last_time, txt_last_play_time;
+    public static LinearLayout layout_bookmark;
+    public static TextView txt_last_time, txt_last_play_time;
     public static RelativeLayout layout_vol_bright;
     public static RelativeLayout layout_small_vol_bright;
-    public ImageView img_brigth, img_volume;
-    public ImageView img_play_defi;
+    public static ImageView img_brigth, img_volume;
+    public static ImageView img_play_defi;
     public boolean isFullOrSmall;
     public static LinearLayout layout_seekbar;
     public boolean mEnableWheelbar;
-    public ImageView img_bookmark_cancel;
+    public static ImageView img_bookmark_cancel;
     public static boolean isLive = true;
     public static OnPlayerControlListener listener = null;
     public static int length = 0;
@@ -210,11 +211,12 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         //img_play_channel显示选集状态，点击弹出选集弹窗
         if ((STATE_VOD_LIVE == 0)) {
             img_play_favorite.setOnClickListener(new OnClickListioners(mContext, "mFavorite"));
-            img_play_channel.setImageResource(R.drawable.live_drama);
+            Rescourse.setImg_play_channel_bg(R.drawable.live_drama);
         }
         //直播时隐藏收藏按钮，img_play_channel显示选择频道状态，点击弹出频道弹窗
         if ((STATE_VOD_LIVE == 1)) {
             img_play_favorite.setVisibility(View.GONE);
+            Rescourse.setImg_play_channel_bg(R.drawable.live_channel_select);
         }
         img_play_channel.setOnClickListener(new OnClickListioners(mContext, "mPlayChannel"));
 
@@ -285,7 +287,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 mSize.setVisibility(View.GONE);
                 mOverlayContent.setVisibility(View.GONE);
                 mOverlayHeader.setVisibility(View.VISIBLE);
-                img_play_channel.setVisibility(View.VISIBLE);
+                if(KeyShow.isImg_play_channel_show())img_play_channel.setVisibility(View.VISIBLE);
                 int sWidth = CommonApi.getScreenWidth(mContext);
                 int sHeight = CommonApi.getScreenHeight(mContext);
                 ViewGroup.LayoutParams mLayoutParams = this.getLayoutParams();
@@ -311,7 +313,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
             } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && isFullOrSmall) {
                 mContext.getWindow().clearFlags(
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                mSize.setVisibility(View.VISIBLE);
+                if(KeyShow.isPlayer_overlay_size_show())mSize.setVisibility(View.VISIBLE);
                 mOverlayContent.setVisibility(View.VISIBLE);
                 mOverlayHeader.setVisibility(View.VISIBLE);
                 img_play_channel.setVisibility(View.GONE);
@@ -430,8 +432,8 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
-         if (isFullOrSmall) {
-             //全屏时切换至小屏播放
+        if (isFullOrSmall) {
+            //全屏时切换至小屏播放
             switch (GetScreenRotation.getScreenRotation(mContext)) {
                 case Surface.ROTATION_90:
                 case Surface.ROTATION_270:
@@ -445,7 +447,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
             }
         } else {
-             //退出
+            //退出
             if(listener != null){
                 listener.setOnBackPressed();
             }
@@ -454,9 +456,9 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     public void setFavoriteBg(boolean isFavorite) {
         if (isFavorite) {
-            img_play_favorite.setImageResource(R.drawable.live_precolle);
+            img_play_favorite.setImageResource(Rescourse.getImg_play_favorite_bg());
         } else {
-            img_play_favorite.setImageResource(R.drawable.live_collection);
+            img_play_favorite.setImageResource(Rescourse.getImg_play_unfavorite_bg());
         }
     }
 
@@ -494,14 +496,14 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         if (mScreenOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
             mContext.setRequestedOrientation(GetScreenRotation.getScreenOrientation(mContext));
         // showInfo(R.string.locked, 1000);
-        mLock.setImageResource(R.drawable.live_lockx);
+        mLock.setImageResource(Rescourse.getLock_overlay_button_bg());
         mOverlayHeader.setVisibility(View.INVISIBLE);
         mOverlayProgress.setVisibility(View.INVISIBLE);
         layout_vol_bright.setVisibility(View.GONE);
         layout_small_vol_bright.setVisibility(View.GONE);
         setPopuWindowDismiss();
         isChannelShow = false;
-        img_play_channel.setImageResource(R.drawable.live_drama);
+        img_play_channel.setImageResource(Rescourse.getImg_play_channel_bg());
         showOverlay();
     }
 
@@ -512,7 +514,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         if (mScreenOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
             mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         // showInfo(R.string.unlocked, 1000);
-        mLock.setImageResource(R.drawable.live_unlock);
+        mLock.setImageResource(Rescourse.getUnlock_overlay_button_bg());
         mShowing = false;
         showOverlay();
     }
@@ -632,7 +634,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public void mLockShow(int timeout) {
         mHandler.sendEmptyMessage(SHOW_PROGRESS);
         if (!mShowing) {
-            mLock.setVisibility(View.VISIBLE);
+            if(KeyShow.isLock_overlay_button_show())mLock.setVisibility(View.VISIBLE);
             mShowing = true;
             Message msg = mHandler.obtainMessage(LOCK_SHOW);
             if (timeout != 0) {
@@ -707,9 +709,9 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public void setState(boolean isPlaying) {
         this.isPlaying = isPlaying;
         if (isPlaying) {
-            player_overlay_play.setImageResource(R.drawable.live_landscape_stopx);
+            player_overlay_play.setImageResource(Rescourse.getPlayer_overlay_play_bg());
         } else {
-            player_overlay_play.setImageResource(R.drawable.live_landscape_play);
+            player_overlay_play.setImageResource(Rescourse.getPlayer_overlay_pause_bg());
         }
     }
 
@@ -718,7 +720,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         if (isSmallVolBri) {
             layout_small_vol_bright.setVisibility(View.GONE);
         } else {
-            layout_small_vol_bright.setVisibility(View.VISIBLE);
+            if(KeyShow.isImg_bright_volume_show())layout_small_vol_bright.setVisibility(View.VISIBLE);
         }
     }
 
@@ -727,9 +729,9 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         if (isFullVolBri) {
             layout_vol_bright.setVisibility(View.GONE);
         } else {
-            layout_vol_bright.setVisibility(View.VISIBLE);
-            img_brigth.setImageResource(R.drawable.live_brightness);
-            img_volume.setImageResource(R.drawable.live_volume);
+            if(KeyShow.isImg_bright_volume_show())layout_vol_bright.setVisibility(View.VISIBLE);
+            img_brigth.setImageResource(Rescourse.getImg_bright_bg());
+            img_volume.setImageResource(Rescourse.getImg_volume_bg());
         }
     }
 
@@ -745,15 +747,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     @Override
     public void setDefinition(String string) {
-        if(string.equals("1")){
-            img_play_defi.setImageResource(R.drawable.live_sd);
-        }else if(string.equals("2")){
-            img_play_defi.setImageResource(R.drawable.live_hd);
-        }else if(string.equals("4")){
-            img_play_defi.setImageResource(R.drawable.live_vhd);
-        }else{
-            img_play_defi.setImageResource(R.drawable.live_sd);
-        }
+        img_play_defi.setImageResource(Rescourse.getImg_play_defi_bg());
     }
 
     @Override
@@ -769,7 +763,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @Override
     public void setFavoriteShow(boolean show) {
         if(show) {
-            img_play_favorite.setVisibility(View.VISIBLE);
+            if(KeyShow.isImg_play_favorite_show())img_play_favorite.setVisibility(View.VISIBLE);
         }else{
             img_play_favorite.setVisibility(View.GONE);
         }
@@ -778,7 +772,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @Override
     public void setDlnaShow(boolean show) {
         if(show) {
-            img_play_dlna.setVisibility(View.VISIBLE);
+            if(KeyShow.isImg_play_dlna_show())img_play_dlna.setVisibility(View.VISIBLE);
         }else{
             img_play_dlna.setVisibility(View.GONE);
         }
@@ -787,7 +781,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @Override
     public void setShareShow(boolean show) {
         if(show) {
-            img_play_share.setVisibility(View.VISIBLE);
+            if(KeyShow.isImg_play_share_show())img_play_share.setVisibility(View.VISIBLE);
         }else{
             img_play_share.setVisibility(View.GONE);
         }
