@@ -148,8 +148,10 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void initPlayer() {
         // TODO Auto-generated method stub
-        mContext.setRequestedOrientation(mScreenOrientation != 100 ? mScreenOrientation
-                : GetScreenRotation.getScreenOrientation(mContext));
+        if(mOverlayContent != null) {
+            mContext.setRequestedOrientation(mScreenOrientation != 100 ? mScreenOrientation
+                    : GetScreenRotation.getScreenOrientation(mContext));
+        }
         // 100 is the value for screen_orientation_start_lock
         if (org.videolan.vlc.Util.isICSOrLater())
             mContext.getWindow()
@@ -433,7 +435,10 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        if(mOverlayContent == null)listener.setOnBackPressed();
+        if(mOverlayContent == null){
+            listener.setOnBackPressed();
+            return;
+        }
         if (isFullOrSmall) {
             //全屏时切换至小屏播放
             switch (GetScreenRotation.getScreenRotation(mContext)) {
@@ -547,7 +552,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mOverlayContent.getVisibility() == View.VISIBLE
+        if (mOverlayContent != null && mOverlayContent.getVisibility() == View.VISIBLE
                 && event.getY() > screenWidth * 9 / 16) {
             return false;
         }
