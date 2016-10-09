@@ -28,11 +28,7 @@ import com.kys.playercontrol.customview.PopupWindows;
 import com.kys.playercontrol.R;
 import com.kys.playercontrol.interfaces.IPlayerControl;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
-import com.kys.playercontrol.tools.BrightVolTouch;
 import com.kys.playercontrol.tools.CommonApi;
-import com.kys.playercontrol.tools.GetScreenRotation;
-import com.kys.playercontrol.tools.OverlayShow;
-import com.kys.playercontrol.tools.SeekProgress;
 
 import org.videolan.vlc.Util;
 import org.videolan.vlc.WeakHandler;

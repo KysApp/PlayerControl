@@ -1,4 +1,4 @@
-package com.kys.playercontrol.tools;
+package com.kys.playercontrol.widget;
 /**
  * Created by 幻云紫日 on 2016/9/26.
  */

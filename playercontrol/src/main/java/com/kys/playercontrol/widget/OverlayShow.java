@@ -1,4 +1,4 @@
-package com.kys.playercontrol.tools;
+package com.kys.playercontrol.widget;
 /**
  * Created by 幻云紫日 on 2016/9/29.
  */
@@ -8,11 +8,6 @@ import android.os.Message;
 import android.view.Surface;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-
-import com.kys.playercontrol.R;
-import com.kys.playercontrol.widget.KeyShow;
-import com.kys.playercontrol.widget.PlayControl;
-import com.kys.playercontrol.widget.Rescourse;
 
 /**
  * 作者：幻云紫日 on 2016/9/29 13:39

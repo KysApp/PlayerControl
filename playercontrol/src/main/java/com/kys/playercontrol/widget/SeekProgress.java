@@ -1,4 +1,4 @@
-package com.kys.playercontrol.tools;
+package com.kys.playercontrol.widget;
 /**
  * Created by 幻云紫日 on 2016/9/27.
  */
@@ -6,8 +6,6 @@ package com.kys.playercontrol.tools;
 import android.app.Activity;
 import android.text.format.DateFormat;
 import android.widget.SeekBar;
-
-import com.kys.playercontrol.widget.PlayControl;
 
 import org.videolan.vlc.Util;
 
