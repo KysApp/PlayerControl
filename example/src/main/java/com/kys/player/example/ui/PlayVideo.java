@@ -37,11 +37,8 @@ import com.kys.player.example.customview.NoScrollGridView;
 import com.kys.player.example.entity.Video;
 import com.kys.player.example.tools.HttpJsonObjectHelper;
 import com.kys.player.example.tools.Json2EntityHelper2;
-import com.kys.playercontrol.widget.KeyShow;
-import com.kys.playercontrol.widget.KeyStyle;
 import com.kys.playercontrol.widget.PlayControl;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
-import com.kys.playercontrol.widget.Rescourse;
 import com.zxt.dlna.activity.SettingActivity;
 import com.zxt.dlna.dmc.SetAVTransportURIActionCallback;
 import com.zxt.dlna.dmp.DeviceItem;
@@ -541,7 +538,6 @@ public class PlayVideo extends Activity {
                         mSurface.setVideoPath(mPath);
                         mSurface.seekTo(time);
                         mSurface.start();
-                        mPlayerControlListener.onPlayPause();   //修改播放器状态
 //                        getVodBookmark();
                     } else {
                         Toast.makeText(PlayVideo.this, response.optString("errormsg", ""), Toast.LENGTH_SHORT).show();
@@ -880,8 +876,7 @@ public class PlayVideo extends Activity {
         frame_control.addView((View) mPlayControl);
 //        Rescourse.setImg_play_channel_bg(R.drawable.back);
 //        KeyShow.setPlayer_overlay_back_show(false);
-        KeyStyle.setmTitleStyle(R.style.blue_0085d1_30_32);
-        mPlayControl.setTitle("11111111111111");
+//        KeyStyle.setmTitleStyle(R.style.blue_0085d1_30_32);
         mSurface.setOnPreparedListener(mOnPreparedListener);
         mSurface.setOnCompletionListener(mOnCompletionListener);
         mSurface.setOnSeekCompleteListener(new IMediaPlayer.OnSeekCompleteListener() {
@@ -962,6 +957,7 @@ public class PlayVideo extends Activity {
         public void onPrepared(IMediaPlayer mp) {
             // TODO Auto-generated method stub
             mProgressBar.setVisibility(View.GONE);
+            mPlayerControlListener.onState();
         }
     };
 
@@ -1013,7 +1009,7 @@ public class PlayVideo extends Activity {
         }
 
         @Override
-        public void onState(boolean isPlaying) {        //播放状态监听
+        public void onState() {        //播放状态监听
             mPlayControl.setState(mSurface.isPlaying());
         }
 

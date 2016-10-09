@@ -21,8 +21,9 @@
         android:layout_alignParentTop="true"
         android:background="@color/transparent_gray"
         android:gravity="center_vertical"
-        android:padding="@dimen/subtitle_padding"
         android:orientation="horizontal"
+        android:paddingLeft="@dimen/width_9"
+        android:paddingRight="@dimen/width_9"
         android:visibility="invisible">
 
         <ImageView
@@ -31,9 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/width_13"
-            android:paddingTop="@dimen/width_4"
-            android:paddingBottom="@dimen/width_4"
+            android:paddingLeft="@dimen/width_9"
+            android:paddingRight="@dimen/width_9"
             android:src="@drawable/back"
             />
 
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/width_4"
             android:paddingRight="@dimen/width_4"
-            android:layout_marginRight="@dimen/width_13"
+            android:layout_marginRight="@dimen/width_9"
             />
 
         <TextView
@@ -89,12 +89,12 @@
     <LinearLayout
         android:id="@+id/progress_overlay"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/width_38"
+        android:layout_height="@dimen/width_40"
         android:layout_alignParentBottom="true"
         android:background="@color/transparent_gray"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/width_15"
-        android:paddingRight="@dimen/width_14"
+        android:paddingLeft="@dimen/width_18"
+        android:paddingRight="@dimen/width_18"
         android:alpha="0.7"
         android:visibility="invisible">
 
@@ -242,9 +242,9 @@
             android:id="@+id/lock_overlay_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:padding="10dp"
-            android:src="@drawable/live_unlock" />
+            android:padding="@dimen/width_18"
+            android:src="@drawable/live_unlock"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <ProgressBar

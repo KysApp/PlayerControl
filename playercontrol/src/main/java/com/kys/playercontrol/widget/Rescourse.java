@@ -18,7 +18,7 @@ public class Rescourse extends PlayControl{
     private static int img_play_favorite_bg = R.drawable.live_precolle;
     private static int img_play_share_bg = R.drawable.live_share;
     private static int player_overlay_play_bg = R.drawable.live_landscape_play;
-    private static int player_overlay_pause_bg = R.drawable.live_landscape_play;
+    private static int player_overlay_pause_bg = R.drawable.live_landscape_stopx;
     private static int player_overlay_seekbar_bg = R.drawable.progress_horizontal;
     private static int img_play_channel_bg = R.drawable.live_channel_select;
     private static int img_play_defi_bg = R.drawable.live_sd;

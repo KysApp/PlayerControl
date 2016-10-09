@@ -705,12 +705,7 @@ public class PlayLive extends Activity implements OnClickListener,
         }
 
         @Override
-        public void onState(boolean isPlaying) {
-            if (isPlaying) {
-                mSurface.start();
-            } else {
-                mSurface.pause();
-            }
+        public void onState() {
             mPlayControl.setState(mSurface.isPlaying());
         }
 

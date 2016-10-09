@@ -28,7 +28,7 @@ public interface OnPlayerControlListener {
 
     public abstract void onSeekTo(int position);
 
-    public abstract void onState(boolean isPlaying);
+    public abstract void onState();
 
     public abstract int onVideoLength();
 

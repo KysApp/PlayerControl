@@ -96,4 +96,6 @@
     <dimen name="width_56">56dp</dimen>
     <dimen name="width_28">28dp</dimen>
     <dimen name="width_30">30dp</dimen>
+    <dimen name="width_40">40dp</dimen>
+    <dimen name="width_46">46dp</dimen>
 </resources>

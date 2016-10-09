@@ -279,6 +279,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public void onConfigurationChanged(Configuration newConfig) {
         // TODO Auto-generated method stub
         super.onConfigurationChanged(newConfig);
+        if(mOverlayContent == null)return;
         OverlayShow.hideOverlay(true);
         if (newConfig != null) {
             if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && !isFullOrSmall) {
@@ -432,6 +433,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
+        if(mOverlayContent == null)listener.setOnBackPressed();
         if (isFullOrSmall) {
             //全屏时切换至小屏播放
             switch (GetScreenRotation.getScreenRotation(mContext)) {
@@ -709,9 +711,9 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public void setState(boolean isPlaying) {
         this.isPlaying = isPlaying;
         if (isPlaying) {
-            player_overlay_play.setImageResource(Rescourse.getPlayer_overlay_play_bg());
-        } else {
             player_overlay_play.setImageResource(Rescourse.getPlayer_overlay_pause_bg());
+        } else {
+            player_overlay_play.setImageResource(Rescourse.getPlayer_overlay_play_bg());
         }
     }
 

@@ -5,9 +5,6 @@ package com.kys.playercontrol.widget;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-
-import com.kys.playercontrol.R;
 
 /**
  * 作者：幻云紫日 on 2016/9/29 11:44

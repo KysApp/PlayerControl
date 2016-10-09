@@ -27,6 +27,8 @@ public class KeyShow extends PlayControl {
     private static boolean img_bookmark_cancel_show = true;
     private static boolean mTitle_show = true;
     private static boolean mSysTime_show = true;
+    private static boolean mTime_show = true;
+    private static boolean mLength_show = true;
     private static Activity mContext;
 
     public KeyShow(Activity context) {
@@ -174,5 +176,23 @@ public class KeyShow extends PlayControl {
     public static void setmSysTime_show(boolean isShow) {
         mSysTime_show = isShow;
         if(!mSysTime_show)mSysTime.setVisibility(View.INVISIBLE);
+    }
+
+    public static boolean ismTime_show() {
+        return mTime_show;
+    }
+
+    public static void setmTime_show(boolean isShow) {
+        mTime_show = isShow;
+        if(!mTime_show)mTime.setVisibility(View.INVISIBLE);
+    }
+
+    public static boolean ismLength_show() {
+        return mLength_show;
+    }
+
+    public static void setmLength_show(boolean isShow) {
+        mLength_show = isShow;
+        if(!mLength_show)mLength.setVisibility(View.INVISIBLE);
     }
 }

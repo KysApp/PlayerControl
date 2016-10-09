@@ -32,6 +32,7 @@ public class OverlayShow extends PlayControl{
             dimStatusBar(false);
             switch (GetScreenRotation.getScreenRotation(mContext)) {
                 case Surface.ROTATION_0:
+                    if(mOverlayContent == null)return;
                     mLock.setVisibility(View.GONE);
                     mOverlayHeader.setVisibility(View.VISIBLE);
                     mOverlayProgress.setVisibility(View.VISIBLE);
@@ -52,6 +53,7 @@ public class OverlayShow extends PlayControl{
                     }
                     break;
                 case Surface.ROTATION_180:
+                    if(mOverlayContent == null)return;
                     mLock.setVisibility(View.GONE);
                     mOverlayHeader.setVisibility(View.VISIBLE);
                     mOverlayProgress.setVisibility(View.VISIBLE);
