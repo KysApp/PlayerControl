@@ -17,16 +17,7 @@ public class SeekProgress extends PlayControl{
     }
 
     /**
-     * update the overlay播放器进度显示
-     * @param mContext
-     * @param mSeekbar
-     * @param mTime
-     * @param mLength
-     * @param listener
-     * @param mSysTime
-     * @param time
-     * @param length
-     * @param mDisplayRemainingTime
+     * @return
      */
     public static int setOverlayProgress() {
         // Update all view elements

@@ -30,12 +30,7 @@ public class Util {
     /** A set of utility functions for the VLC application */
 
     static {
-        HashSet<String> devicesWithoutNavBar = new HashSet<String>();
-        devicesWithoutNavBar.add("HTC One V");
-        devicesWithoutNavBar.add("HTC One S");
-        devicesWithoutNavBar.add("HTC One X");
-        devicesWithoutNavBar.add("HTC One XL");
-        hasNavBar = isICSOrLater() && !devicesWithoutNavBar.contains(android.os.Build.MODEL);
+        hasNavBar = isICSOrLater();
     }
 
     /**

@@ -188,7 +188,7 @@ public class OverlayShow extends PlayControl{
     }
 
     /**
-     * hider overlay
+     * @param fromUser
      */
     public static void hideOverlay(boolean fromUser) {
 

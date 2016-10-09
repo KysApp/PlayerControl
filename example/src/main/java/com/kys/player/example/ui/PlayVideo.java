@@ -1111,7 +1111,10 @@ public class PlayVideo extends Activity {
 
         @Override
         public void setOnBackPressed() {        //退出当前Activity
-            finished();
+//            finished();
+            mSurface.stopPlayback();
+            getApplicationContext().unbindService(serviceConnection);
+            finish();
         }
 
         @Override

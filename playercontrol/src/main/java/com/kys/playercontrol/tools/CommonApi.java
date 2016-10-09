@@ -32,7 +32,6 @@ public class CommonApi {
 
     /**
      * 屏幕宽度
-     *
      * @param context
      * @return
      */
@@ -46,7 +45,6 @@ public class CommonApi {
 
     /**
      * 屏幕高度
-     *
      * @param context
      * @return
      */

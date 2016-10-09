@@ -13,7 +13,15 @@ import android.view.WindowManager;
  */
 public class BrightVolTouch {
 
-    //音量控制
+    /**
+     * 音量控制
+     * @param y_changed
+     * @param mSurfaceYDisplayRange
+     * @param mAudioMax
+     * @param mVol
+     * @param mAudioManager
+     * @return
+     */
     public static int doVolumeTouch(float y_changed,
                                      int mSurfaceYDisplayRange, int mAudioMax, float mVol,
                                      AudioManager mAudioManager) {
@@ -28,7 +36,10 @@ public class BrightVolTouch {
 
     }
 
-    //亮度控制
+    /**
+     * 亮度控制
+     * @param mContext
+     */
     public static void initBrightnessTouch(Activity mContext) {
         float brightnesstemp = 0.01f;
         // Initialize the layoutParams screen brightness
@@ -45,6 +56,14 @@ public class BrightVolTouch {
         mContext.getWindow().setAttributes(lp);
     }
 
+    /**
+     * 屏幕滑动与亮度显示
+     * @param mContext
+     * @param y_changed
+     * @param mIsFirstBrightnessGesture
+     * @param mSurfaceYDisplayRange
+     * @return
+     */
     public static float doBrightnessTouch(Activity mContext, float y_changed, boolean mIsFirstBrightnessGesture, int mSurfaceYDisplayRange) {
         if (mIsFirstBrightnessGesture)
             initBrightnessTouch(mContext);

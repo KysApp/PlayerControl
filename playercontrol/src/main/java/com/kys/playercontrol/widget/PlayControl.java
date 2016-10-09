@@ -111,6 +111,12 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         super(context);
     }
 
+    /**
+     * @param context
+     * @param view1 控制层及播放器的父控件
+     * @param view2 视频简介的layout
+     * @param come 用于判断视频内容，0为点播，1为直播
+     */
     public PlayControl(Activity context, View view1, View view2, int come) {
         super(context);
         mContext = context;
@@ -122,6 +128,13 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         initPlayer();
     }
 
+    /**
+     * @param context
+     * @param view1 控制层及播放器的父控件
+     * @param view2 视频简介的layout
+     * @param isLive 判断直播回看，true为直播，false为回看
+     * @param come 用于判断视频内容，0为点播，1为直播
+     */
     public PlayControl(Activity context, View view1, View view2, boolean isLive, int come) {
         super(context);
         mContext = context;
@@ -140,33 +153,35 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         this.listener = listener;
     }
 
-    //播放控制层初始化
+    /**
+     * 播放控制层初始化
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void initPlayer() {
         // TODO Auto-generated method stub
         if(mOverlayContent != null) {
             mContext.setRequestedOrientation(mScreenOrientation != 100 ? mScreenOrientation
                     : GetScreenRotation.getScreenOrientation(mContext));
+            if (org.videolan.vlc.Util.isICSOrLater())
+                mContext.getWindow()
+                        .getDecorView()
+                        .findViewById(android.R.id.content)
+                        .setOnSystemUiVisibilityChangeListener(
+                                new OnSystemUiVisibilityChangeListener() {
+                                    @Override
+                                    public void onSystemUiVisibilityChange(
+                                            int visibility) {
+                                        if (visibility == mUiVisibility)
+                                            return;
+                                        if (visibility == View.SYSTEM_UI_FLAG_VISIBLE
+                                                && !mShowing) {
+                                            showOverlay();
+                                        }
+                                        mUiVisibility = visibility;
+                                    }
+                                });
         }
         // 100 is the value for screen_orientation_start_lock
-        if (org.videolan.vlc.Util.isICSOrLater())
-            mContext.getWindow()
-                    .getDecorView()
-                    .findViewById(android.R.id.content)
-                    .setOnSystemUiVisibilityChangeListener(
-                            new OnSystemUiVisibilityChangeListener() {
-                                @Override
-                                public void onSystemUiVisibilityChange(
-                                        int visibility) {
-                                    if (visibility == mUiVisibility)
-                                        return;
-                                    if (visibility == View.SYSTEM_UI_FLAG_VISIBLE
-                                            && !mShowing) {
-                                        showOverlay();
-                                    }
-                                    mUiVisibility = visibility;
-                                }
-                            });
 
         /** initialize Views an their Events */
         mOverlayHeader = findViewById(R.id.player_overlay_header);
@@ -180,11 +195,10 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
 
 		/* header */
         mTitle = (TextView) findViewById(R.id.player_overlay_title);
-        mTitle.setGravity(Gravity.CENTER);
+        mTitle.setText("ssldfjslkdfj");
         mSysTime = (TextView) findViewById(R.id.player_overlay_systime);
         btn_back = (ImageView) findViewById(R.id.player_overlay_back);
         btn_back.setOnClickListener(new OnClickListioners(mContext, "mExitFullScreenListener"));
-        // mOverlayHeader.setVisibility(View.GONE);
 
         // Position and remaining time
         mTime = (TextView) findViewById(R.id.player_overlay_time);
@@ -457,6 +471,9 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
         }
     }
 
+    /**
+     * @param isFavorite true为已收藏，false为未收藏
+     */
     public void setFavoriteBg(boolean isFavorite) {
         if (isFavorite) {
             img_play_favorite.setImageResource(Rescourse.getImg_play_favorite_bg());

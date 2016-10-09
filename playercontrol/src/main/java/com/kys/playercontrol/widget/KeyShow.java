@@ -4,11 +4,11 @@ package com.kys.playercontrol.widget;
  */
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 
 /**
  * 作者：幻云紫日 on 2016/9/29 11:44
+ * 用于设置相关控件是否显示
  */
 public class KeyShow extends PlayControl {
 
