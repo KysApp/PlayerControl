@@ -6,21 +6,11 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/popupwindow_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.5"
-        android:background="@color/black"
         android:orientation="vertical">
-
-
-        <!--<GridView
-            android:id="@+id/mGridView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:numColumns="4"
-            android:cacheColorHint="@android:color/transparent"
-            android:listSelector="@android:color/transparent"
-            android:scrollbarThumbVertical="@android:color/transparent" />-->
     </LinearLayout>
 
     <LinearLayout

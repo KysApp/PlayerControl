@@ -187,7 +187,7 @@
 
     };
 
-三、控制层相关设置
+三、控制层相关参数设置
 -
     //切换播放按钮图片
     mPlayControl.setState(boolean isPlaying);
@@ -213,9 +213,3 @@
     mPlayControl.setDefinition(String string);
     //设置上次播放时间
     mPlayControl.setBookMark(int position);
-    //是否显示收藏按钮
-    mPlayControl.setFavoriteShow(boolean show);
-    //是否显示投屏按钮
-    mPlayControl.setDlnaShow(boolean show);
-    //是否显示分享按钮
-    mPlayControl.setShareShow(boolean show);

@@ -30,6 +30,7 @@ public class Rescourse extends PlayControl{
     private static int img_bright_bg = R.drawable.live_brightness;
     private static int img_volume_bg = R.drawable.live_volume;
     private static int img_bookmark_cancel_bg = R.drawable.close;
+    private static int popupwindow_bg = R.color.black;
     private static Activity mContext;
 
     public Rescourse(Activity context) {
@@ -107,6 +108,30 @@ public class Rescourse extends PlayControl{
         unlock_overlay_button_bg = imgId;
     }
 
+    public static void setPopupwindow_bg(int imgId) {
+        popupwindow_bg = imgId;
+    }
+
+    public static void setUnlock_overlay_button_bg(int imgId) {
+        mLock.setImageResource(imgId);
+        unlock_overlay_button_bg = imgId;
+    }
+
+    public static void setImg_bright_bg(int imgId) {
+        img_bright_bg = imgId;
+        img_brigth.setImageResource(img_bright_bg);
+    }
+
+    public static void setImg_volume_bg(int imgId) {
+        img_volume_bg = imgId;
+        img_volume.setImageResource(imgId);
+    }
+
+    public static void setImg_bookmark_cancel_bg(int imgId) {
+        img_bookmark_cancel_bg = imgId;
+        img_bookmark_cancel.setImageResource(imgId);
+    }
+
     public static void setProgressBar_bg(int imgId) {
         progressBar_bg = imgId;
     }
@@ -178,4 +203,9 @@ public class Rescourse extends PlayControl{
     public static int getImg_bookmark_cancel_bg() {
         return img_bookmark_cancel_bg;
     }
+
+    public static int getPopupwindow_bg() {
+        return popupwindow_bg;
+    }
+
 }

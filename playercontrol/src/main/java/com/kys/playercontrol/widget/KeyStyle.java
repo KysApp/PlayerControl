@@ -55,6 +55,11 @@ public class KeyStyle extends PlayControl {
         mTime.setTextAppearance(mTimeStyle);
     }
 
+    public static void setmLengthStyle(int mStyle) {
+        mLengthStyle = mStyle;
+        mLength.setTextAppearance(mLengthStyle);
+    }
+
     public static void setmInfoStyle(int mStyle) {
         mInfoStyle = mStyle;
         mInfo.setTextAppearance(mInfoStyle);
@@ -68,11 +73,6 @@ public class KeyStyle extends PlayControl {
     public static void setTxt_last_play_timeStyle(int mStyle) {
         txt_last_play_timeStyle = mStyle;
         txt_last_play_time.setTextAppearance(txt_last_play_timeStyle);
-    }
-
-    public static void setmLengthStyle(int mStyle) {
-        mLengthStyle = mStyle;
-        mLength.setTextAppearance(mLengthStyle);
     }
 
     public static void setmTitleTypeface(Typeface mTypeface) {

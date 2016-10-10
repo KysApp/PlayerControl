@@ -9,7 +9,6 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;

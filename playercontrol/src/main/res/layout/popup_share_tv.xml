@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
      >
-    
-    <LinearLayout 
+
+    <LinearLayout
+        android:id="@+id/popupwindow_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_262626"
-        android:alpha="0.7"
-        >
-
+        android:alpha="0.5"
+        android:orientation="vertical">
     </LinearLayout>
 
     <LinearLayout

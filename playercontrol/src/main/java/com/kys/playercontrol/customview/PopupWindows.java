@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.kys.playercontrol.R;
 import com.kys.playercontrol.interfaces.OnPlayerControlListener;
 import com.kys.playercontrol.tools.CommonApi;
+import com.kys.playercontrol.widget.Rescourse;
 
 /**
  * 作者：幻云紫日 on 2016/9/26 15:15
@@ -30,6 +31,7 @@ public class PopupWindows {
         View popupView = LayoutInflater.from(mContext).inflate(
                 R.layout.popup_play_tv, null);
         TextView txt_select = (TextView) popupView.findViewById(R.id.txt_select);
+        popupView.findViewById(R.id.popupwindow_bg).setBackgroundResource(Rescourse.getPopupwindow_bg());
         txt_select.setText(mContext.getResources().getString(R.string.select_series));
         int sWidth = CommonApi.getScreenWidth(mContext);
         int sHeight = CommonApi.getScreenHeight(mContext);
@@ -46,13 +48,14 @@ public class PopupWindows {
 
     //清晰度切换
     public static void intDefinition(Activity mContext, PopupWindow popuDefinition, View view, OnPlayerControlListener listener) {
-        View mView = LayoutInflater.from(mContext).inflate(R.layout.popup_play_definition, null);
-        ListView mListView = (ListView) mView.findViewById(R.id.list);
+        View popupView = LayoutInflater.from(mContext).inflate(R.layout.popup_play_definition, null);
+        popupView.findViewById(R.id.popupwindow_bg).setBackgroundResource(Rescourse.getPopupwindow_bg());
+        ListView mListView = (ListView) popupView.findViewById(R.id.list);
         int popuWidth = mContext.getResources().getDimensionPixelOffset(R.dimen.width_61);
         int popuHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.width_30) * 3;
         popuDefinition.setWidth(popuWidth);
         popuDefinition.setHeight(popuHeight);
-        popuDefinition.setContentView(mView);
+        popuDefinition.setContentView(popupView);
         popuDefinition.setFocusable(true);
         popuDefinition.setBackgroundDrawable(new BitmapDrawable());
         int[] location = new int[2];
@@ -72,6 +75,7 @@ public class PopupWindows {
         // TODO Auto-generated method stub
         View popupView = LayoutInflater.from(mContext).inflate(
                 R.layout.popup_share_tv, null);
+        popupView.findViewById(R.id.popupwindow_bg).setBackgroundResource(Rescourse.getPopupwindow_bg());
         TextView txt_select = (TextView) popupView.findViewById(R.id.txt_select);
         txt_select.setText(mContext.getResources().getString(R.string.select_dlna));
         txt_refresh = (TextView) popupView.findViewById(R.id.txt_refresh);
@@ -117,6 +121,7 @@ public class PopupWindows {
         // TODO Auto-generated method stub
         View popupView = LayoutInflater.from(mContext).inflate(
                 R.layout.popup_play_model, null);
+        popupView.findViewById(R.id.popupwindow_bg).setBackgroundResource(Rescourse.getPopupwindow_bg());
         int screenWidth = CommonApi.getScreenWidth(mContext);
         int screenHeight = CommonApi.getScreenHeight(mContext);
         popupChannelInfo.setWidth(screenWidth / 3);
