@@ -104,16 +104,16 @@ public class PopupWindows {
 
     public static void setDlnaRefresh(boolean show) {
 
-        if(share_progressBar != null && txt_refresh!=null)
-        if(show){
-            if (share_progressBar != null)
-                share_progressBar.setVisibility(View.VISIBLE);
-            txt_refresh.setText("点击重新刷新");
-        }else{
-            if (share_progressBar != null)
-                share_progressBar.setVisibility(View.GONE);
+        if(share_progressBar != null && txt_refresh!=null) {
+            if (show) {
+                if (share_progressBar != null)
+                    share_progressBar.setVisibility(View.VISIBLE);
+                txt_refresh.setText("点击重新刷新");
+            } else {
+                if (share_progressBar != null)
+                    share_progressBar.setVisibility(View.GONE);
+            }
         }
-
     }
 
     //频道弹窗
