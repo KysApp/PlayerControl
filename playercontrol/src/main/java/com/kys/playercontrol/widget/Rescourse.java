@@ -108,13 +108,8 @@ public class Rescourse extends PlayControl{
         unlock_overlay_button_bg = imgId;
     }
 
-    public static void setPopupwindow_bg(int imgId) {
-        popupwindow_bg = imgId;
-    }
-
-    public static void setUnlock_overlay_button_bg(int imgId) {
-        mLock.setImageResource(imgId);
-        unlock_overlay_button_bg = imgId;
+    public static void setPopupwindow_bg(int colorId) {
+        popupwindow_bg = colorId;
     }
 
     public static void setImg_bright_bg(int imgId) {
