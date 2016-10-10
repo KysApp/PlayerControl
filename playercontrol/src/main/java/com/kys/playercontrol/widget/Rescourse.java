@@ -31,6 +31,7 @@ public class Rescourse extends PlayControl{
     private static int img_volume_bg = R.drawable.live_volume;
     private static int img_bookmark_cancel_bg = R.drawable.close;
     private static int popupwindow_bg = R.color.black;
+    private static int player_overlay_header_progress_bg = R.drawable.live_fullscreen_title;
     private static Activity mContext;
 
     public Rescourse(Activity context) {
@@ -131,6 +132,12 @@ public class Rescourse extends PlayControl{
         progressBar_bg = imgId;
     }
 
+    public static void setPlayer_overlay_header_progress_bg(int imgId) {
+        player_overlay_header_progress_bg = imgId;
+        mOverlayHeader.setBackgroundResource(imgId);
+        mOverlayProgress.setBackgroundResource(imgId);
+    }
+
     public static int getPlayer_overlay_back_bg() {
         return player_overlay_back_bg;
     }
@@ -203,4 +210,7 @@ public class Rescourse extends PlayControl{
         return popupwindow_bg;
     }
 
+    public static int getPlayer_overlay_header_progress_bg() {
+        return player_overlay_header_progress_bg;
+    }
 }

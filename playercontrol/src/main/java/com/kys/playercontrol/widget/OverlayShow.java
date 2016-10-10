@@ -82,6 +82,7 @@ public class OverlayShow extends PlayControl{
                             if (KeyShow.isPlayer_overlay_play_show())
                                 player_overlay_play.setVisibility(View.VISIBLE);
                         }
+                        isFullOrSmall = false;
                         break;
                     case Surface.ROTATION_180:
                         mLock.setVisibility(View.GONE);
@@ -105,6 +106,7 @@ public class OverlayShow extends PlayControl{
                             if (KeyShow.isPlayer_overlay_play_show())
                                 player_overlay_play.setVisibility(View.VISIBLE);
                         }
+                        isFullOrSmall = false;
                         break;
                     case Surface.ROTATION_90:
                         if (mIsLocked) {
@@ -140,6 +142,7 @@ public class OverlayShow extends PlayControl{
                             }
                         }
                         if (KeyShow.isLock_overlay_button_show()) mLock.setVisibility(View.VISIBLE);
+                        isFullOrSmall = true;
                         break;
                     case Surface.ROTATION_270:
                         if (mIsLocked) {
@@ -174,6 +177,7 @@ public class OverlayShow extends PlayControl{
                             }
                         }
                         if (KeyShow.isLock_overlay_button_show()) mLock.setVisibility(View.VISIBLE);
+                        isFullOrSmall = true;
                         break;
 
                 }

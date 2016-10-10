@@ -2,7 +2,14 @@
 =
 一、播放器控制层初始化
 -
-    //java代码
+AndroidManifest.xml设置，在对应的activity中添加
+--
+    android:configChanges="orientation|screenSize"  //用于自动选择屏幕
+    android:screenOrientation="portrait"    //activity初始状态portrait为竖屏，landscape为横屏
+    android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"   //全屏播放
+
+java代码
+--
     FrameLayout frame_control = (FrameLayout) findViewById(R.id.frame_control);
     //this当前activity，View1控制层的父控件；View2其他控件；int == 0为点播，int == 1为直播,当View2为null表示直接进入全屏播放
     PlayControl mPlayControl = new PlayControl(this, View1, View2, int);
@@ -11,7 +18,8 @@
     //添加播放器控制层
     frame_control.addView((View) mPlayControl);
 
-    //xml布局，控制层与播放器在同一父控件下，通过改变父控件大小改变播放器与控制层大小
+xml布局，控制层与播放器在同一父控件下，通过改变父控件大小改变播放器与控制层大小
+--
     <RelativeLayout
             android:id="@+id/overlay_player"
             android:layout_width="match_parent"
@@ -268,6 +276,7 @@
 	Rescourse.setImg_bright_bg(int imgId);//亮度
 	Rescourse.setImg_volume_bg(int imgId);//声音
 	Rescourse.setImg_bookmark_cancel_bg(int imgId);//书签取消按键
+	Rescourse.setPlayer_overlay_header_progress_bg(int imgId);//标题栏及进度条栏背景
 	Rescourse.setPopupwindow_bg(int colorId);//弹窗背景
 
 4.3、修改文字样式及字体（mStyle为字体样式，mTypeface为相关字体）

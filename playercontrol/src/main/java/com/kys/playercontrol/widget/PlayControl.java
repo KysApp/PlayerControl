@@ -97,7 +97,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
     public static RelativeLayout layout_small_vol_bright;
     public static ImageView img_brigth, img_volume;
     public static ImageView img_play_defi;
-    public boolean isFullOrSmall;
+    public static boolean isFullOrSmall;
     public static LinearLayout layout_seekbar;
     public boolean mEnableWheelbar;
     public static ImageView img_bookmark_cancel;
@@ -309,10 +309,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 this.requestLayout();
                 setPopuWindowDismiss();
                 layout_small_vol_bright.setVisibility(View.GONE);
-                isShareShow = false;
-                isChannelShow = false;
-                isDefinShow = false;
-                isFullOrSmall = true;
                 ViewGroup.LayoutParams layoutParams = mOverlayPlayer.getLayoutParams();
                 layoutParams.width = sWidth;
                 layoutParams.height = sHeight;
@@ -337,10 +333,6 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 this.requestLayout();
                 setPopuWindowDismiss();
                 layout_vol_bright.setVisibility(View.GONE);
-                isShareShow = false;
-                isChannelShow = false;
-                isDefinShow = false;
-                isFullOrSmall = false;
                 ViewGroup.LayoutParams layoutParams = mOverlayPlayer.getLayoutParams();
                 layoutParams.width = sWidth;
                 layoutParams.height = sWidth * 9 / 16;
@@ -598,6 +590,7 @@ public class PlayControl extends RelativeLayout implements IPlayerControl{
                 mTouchX = event.getRawX();
                 if(listener != null) {
                     mCurrentTime = listener.onTouchCurrentPosition();
+                    listener.onState();
                 }
                 break;
 
