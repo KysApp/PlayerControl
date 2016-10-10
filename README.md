@@ -2,192 +2,209 @@
 =
 一、播放器控制层初始化
 -
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void initPlayer() {
-        // TODO Auto-generated method stub
-        FrameLayout frame_control = (FrameLayout) findViewById(R.id.frame_control);
-        //this当前activity，View1控制层的父控件；View2其他控件；int == 0为点播，int == 1为直播
-        PlayControl mPlayControl = new PlayControl(this, View1, View2, int);
-        //添加播放器控制层监听
-        mPlayControl.setOnPlayerControlListener(mPlayerControlListener);
-        //添加播放器控制层
-        frame_control.addView((View) mPlayControl);
-    }
+    //java代码
+    FrameLayout frame_control = (FrameLayout) findViewById(R.id.frame_control);
+    //this当前activity，View1控制层的父控件；View2其他控件；int == 0为点播，int == 1为直播,当View2为null表示直接进入全屏播放
+    PlayControl mPlayControl = new PlayControl(this, View1, View2, int);
+    //添加播放器控制层监听
+    mPlayControl.setOnPlayerControlListener(mPlayerControlListener);
+    //添加播放器控制层
+    frame_control.addView((View) mPlayControl);
+
+    //xml布局，控制层与播放器在同一父控件下，通过改变父控件大小改变播放器与控制层大小
+    <RelativeLayout
+            android:id="@+id/overlay_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000001">
+
+            <VideoView
+                android:id="@+id/player_surface"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ></VideoView>
+
+            <FrameLayout
+                android:id="@+id/frame_control"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+            </FrameLayout>
+        </RelativeLayout>
 
 二、播放控制层监听
 -
-    private final OnPlayerControlListener mPlayerControlListener = new OnPlayerControlListener() {
-        //播放器状态监听
-        @Override
-        public void onPlayPause() {
-            if (mSurface.isPlaying()) {       //播放时
-                mSurface.pause();       //播放器暂停
-                mPlayControl.setState(false);       //修改播放按键状态
-            } else {
-                mSurface.start();
-                mPlayControl.setState(true);
+    //播放控制层监听
+        public final OnPlayerControlListener mPlayerControlListener = new OnPlayerControlListener() {
+            @Override
+            public void onPlayPause() {     //播放按钮监听
+                if (mSurface.isPlaying()) {
+                    mSurface.pause();
+                    mPlayControl.setState(false);
+                } else {
+                    mSurface.start();
+                    mPlayControl.setState(true);
+                }
+                onVideoLength();
+                mPlayControl.showOverlay();
             }
-            onVideoLength();        //获取视频时长
-            mPlayControl.showOverlay();         //播放器控制层展示
-        }
-        //播放器进度监听
-        @Override
-        public void onSeekTo(int delta) {
-            // unseekable stream
-            if (mSurface.getDuration() <= 0)    //判断视频时长是不是>0
-                return;
-            if (delta < 0)      //判断跳转时间点
-                delta = 0;
-            mSurface.seekTo(delta);     //播放器跳转
-            mPlayControl.setState(mSurface.isPlaying());
-            mPlayControl.onSeekTo(delta);       //播放器进度条跳转
-        }
-        //播放状态监听
-        @Override
-        public void onState(boolean isPlaying) {
-            if (isPlaying) {
-                mSurface.start();
-            } else {
-                mSurface.pause();
-            }
-            mPlayControl.setState(mSurface.isPlaying());
-        }
-        //获取视频时长
-        @Override
-        public void onVideoLength() {
-            mPlayControl.setVideoLength(mSurface.getDuration());
-        }
-        //获取当前播放进度
-        @Override
-        public void onCurrentPosition() {
-            mPlayControl.setCurrentPosition(mSurface.getCurrentPosition());
-        }
-        //获取当前播放进度
-        @Override
-        public void onTouchCurrentPosition() {
-            mPlayControl.setTouchCurrentPosition(mSurface.getCurrentPosition());
-        }
-        //进度条显示监听
-        @Override
-        public boolean canShowProgress() {
-            if (mSurface != null) {
-                return mSurface.isPlaying();
 
+            @Override
+            public void onSeekTo(int delta) {       //播放器进度监听
+                if (mSurface.getDuration() <= 0)
+                    return;
+                if (delta < 0)
+                    delta = 0;
+                mSurface.seekTo(delta);
+                mPlayControl.setState(mSurface.isPlaying());
+                mPlayControl.onSeekTo(delta);
             }
-            return false;
-        }
-        //清晰度数据添加展示
-        @Override
-        public void setDefinition(ListView mListView) {
-            mListView.setAdapter(mSelectDefiAdapter);
-            //清晰度切换，可放在adapter
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    time = mSurface.getCurrentPosition();
-                    String string = Definlist.get(i);
-                    if (string.equals(getString(R.string.sd))) {
-                        definition = "1";
-                        mSelectDefiAdapter.changeSelectedPosition(2);
-                    } else if (string.equals(getString(R.string.sd_h))) {
-                        definition = "2";
-                        mSelectDefiAdapter.changeSelectedPosition(1);
-                    } else if (string.equals(getString(R.string.hd))) {
-                        definition = "4";
-                        mSelectDefiAdapter.changeSelectedPosition(0);
-                    } else {
-                        definition = "1";
-                        mSelectDefiAdapter.changeSelectedPosition(2);
+
+            @Override
+            public void onState() {        //播放状态监听
+                mPlayControl.setState(mSurface.isPlaying());
+            }
+
+            @Override
+            public int onVideoLength() {       //获取视频时长
+                mPlayControl.setVideoLength(mSurface.getDuration());
+                return mSurface.getDuration();
+            }
+
+            @Override
+            public int onCurrentPosition() {       //获取当前播放进度
+                return mSurface.getCurrentPosition();
+            }
+
+            @Override
+            public int onTouchCurrentPosition() {      //获取当前播放进度
+                return mSurface.getCurrentPosition();
+            }
+
+            @Override
+            public boolean canShowProgress() {      //进度条显示监听
+                if (mSurface != null) {
+                    return mSurface.isPlaying();
+
+                }
+                return false;
+            }
+
+            @Override
+            public void setDefinition(ListView mListView) {     //清晰度数据添加展示
+                mListView.setAdapter(mSelectDefiAdapter);
+                if (definition.equals("1")) {
+                    mSelectDefiAdapter.changeSelectedPosition(2);
+                } else if (definition.equals("2")) {
+                    mSelectDefiAdapter.changeSelectedPosition(1);
+                } else if (definition.equals("4")) {
+                    mSelectDefiAdapter.changeSelectedPosition(0);
+                } else {
+                    mSelectDefiAdapter.changeSelectedPosition(2);
+                }
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        time = mSurface.getCurrentPosition();
+                        String string = Definlist.get(i);
+                        if (string.equals(getString(R.string.sd))) {
+                            definition = "1";
+                            mSelectDefiAdapter.changeSelectedPosition(2);
+                        } else if (string.equals(getString(R.string.sd_h))) {
+                            definition = "2";
+                            mSelectDefiAdapter.changeSelectedPosition(1);
+                        } else if (string.equals(getString(R.string.hd))) {
+                            definition = "4";
+                            mSelectDefiAdapter.changeSelectedPosition(0);
+                        } else {
+                            definition = "1";
+                            mSelectDefiAdapter.changeSelectedPosition(2);
+                        }
+                        mPlayControl.setDefinition(definition);
+                        doVodAuth();
+                        mPlayControl.setPopuWindowDismiss();
                     }
-                    mPlayControl.setDefinition(definition);
-                    doVodAuth();
-                    mPlayControl.setPopuWindowDismiss();
-                }
-            });
-        }
-        //频道列表数据添加展示
-        @Override
-        public void setChannelList(ListView mListView) {
-            mListView.setAdapter(mSelectChannelAdapter);
-            for (int i = 0; i < channelList.size(); i++) {
-                Lives lives = channelList.get(i);
-                if (lives.getCid().equals(cid)) {
-                    mSelectChannelAdapter.changeSelectedPosition(i);
-                    break;
-                }
+                });
             }
-        }
-        //投屏设备添加展示
-        @Override
-        public void setDlna(ListView mListView) {
-            mListView.setAdapter(mDmrDevAdapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    mDeviceItem = mDmrList.get(i);
-                    setTVUrl(mPath);
-                    mPlayControl.setPopuWindowDismiss();
-                }
-            });
-        }
-        //剧集添加展示
-        @Override
-        public void setSeries(GridView mGridView) {
-            mGridView.setAdapter(mVideoSeriesFullAdapter);
-        }
-        //添加删除收藏
-        @Override
-        public void getFavorite() {
-            if (isFavorite) {
-                delVodFavorite();
-            } else {
-                addVodFavorite();
-            }
-        }
-        //退出当前Activity
-        @Override
-        public void setOnBackPressed() {
-            mSurface.stopPlayback();
-            getApplicationContext().unbindService(serviceConnection);
-            finish();
-        }
-        //小屏时音量亮度指示图是否显示
-        @Override
-        public void isSmallVolBri() {
-            if (OperateSharePreferences.getInstance(PlayVideo.this).isSmallVolBri()) {
-                mPlayControl.setSmallVolBri(true);
-            } else {
-                mPlayControl.setSmallVolBri(false);
-                OperateSharePreferences.getInstance(PlayVideo.this).saveSmallVolBri(true);
-            }
-        }
-        //全屏时音量亮度指示图是否显示
-        @Override
-        public void isFullVolBri() {
-            if (OperateSharePreferences.getInstance(PlayVideo.this).isFullVolBri()) {
-                mPlayControl.setFullVolBri(true);
-            } else {
-                mPlayControl.setFullVolBri(false);
-                OperateSharePreferences.getInstance(PlayVideo.this).saveFullVolBri(true);
-            }
-        }
-        //DLNA设备刷新
-        @Override
-        public void onRefreshDlna() {
-            if (mDmrList.size() != 0) {
-                upnpService.getRegistry().removeAllRemoteDevices();
-            }
-            upnpService.getControlPoint().search();
-        }
-        //第三方分享监听
-        @Override
-        public void onShare() {
 
-        }
+            @Override
+            public void setChannelList(ListView mListView) {        //频道列表数据添加展示
 
-    };
+            }
 
-三、控制层相关参数设置
+            @Override
+            public void setDlna(ListView mListView) {       //投屏设备添加展示
+                mListView.setAdapter(mDmrDevAdapter);
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        mDeviceItem = mDmrList.get(i);
+                        setTVUrl(mPath);
+                        mPlayControl.setPopuWindowDismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void setSeries(GridView mGridView) {     //剧集添加展示
+                mGridView.setAdapter(mVideoSeriesFullAdapter);
+            }
+
+            @Override
+            public void getFavorite() {     //切换添加删除收藏
+
+                if (isFavorite) {
+                    delVodFavorite();
+                } else {
+                    addVodFavorite();
+                }
+
+            }
+
+            @Override
+            public void setOnBackPressed() {        //退出当前Activity
+                mSurface.stopPlayback();
+                getApplicationContext().unbindService(serviceConnection);
+                finish();
+            }
+
+            @Override
+            public void isSmallVolBri() {       //小屏时音量亮度指示图是否显示
+                if (OperateSharePreferences.getInstance(PlayVideo.this).isSmallVolBri()) {
+                    mPlayControl.setSmallVolBri(true);
+                } else {
+                    mPlayControl.setSmallVolBri(false);
+                    OperateSharePreferences.getInstance(PlayVideo.this).saveSmallVolBri(true);
+                }
+            }
+
+            @Override
+            public void isFullVolBri() {        //全屏时音量亮度指示图是否显示
+                if (OperateSharePreferences.getInstance(PlayVideo.this).isFullVolBri()) {
+                    mPlayControl.setFullVolBri(true);
+                } else {
+                    mPlayControl.setFullVolBri(false);
+                    OperateSharePreferences.getInstance(PlayVideo.this).saveFullVolBri(true);
+                }
+            }
+
+            @Override
+            public void onRefreshDlna() {       //DLNA设备刷新
+                if (mDmrList.size() != 0) {
+                    upnpService.getRegistry().removeAllRemoteDevices();
+                }
+                upnpService.getControlPoint().search();
+            }
+
+            @Override       //全屏分享监听
+            public void onShare() {
+
+            }
+
+        };
+
+三、控制层相关参数设置（在控制层初始化完成之后）
 -
     //切换播放按键图片
     mPlayControl.setState(boolean isPlaying);
@@ -213,8 +230,10 @@
     mPlayControl.setDefinition(String string);
     //设置上次播放时间
     mPlayControl.setBookMark(int position);
+    //设置直播回看，true为直播，false为回看
+    mPlayControl.setLive(boolean show);
 
-四、控制层相关参数设置
+四、控制层相关参数设置（在控制层初始化完成之后）
 -
 4.1、控件是否显示设置(true显示，false隐藏)
 --
